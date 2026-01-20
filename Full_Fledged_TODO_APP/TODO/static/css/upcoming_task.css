@@ -1,0 +1,114 @@
+/* PAGE LAYOUT */
+.upcoming-page {
+    max-width: 80%;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+/* HEADER */
+.upcoming-header {
+    margin-bottom: 1.5rem;
+}
+
+.upcoming-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+}
+
+.upcoming-header p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+/* TASK LIST */
+.upcoming-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* TASK CARD */
+.upcoming-item {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* LEFT */
+.task-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 70%;
+}
+
+.task-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+
+    /* IMPORTANT FOR LONG TEXT */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-title:hover {
+    text-decoration: underline;
+}
+
+.task-type {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+
+/* RIGHT */
+.task-meta {
+    font-size: 0.85rem;
+    color: #374151;
+    white-space: nowrap;
+}
+
+/* EMPTY */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    color: #6b7280;
+}
+
+/* FOOTER */
+.page-footer {
+    margin-top: 2rem;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 500;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .upcoming-page {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    .upcoming-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .task-main {
+        max-width: 100%;
+    }
+}

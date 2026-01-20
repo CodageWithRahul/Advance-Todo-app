@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/add_task.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="task-form-container">
+
+    <h2 class="form-title"> 
+        {% if task.instance.pk %}
+        ✏️ Edit Task
+    {% else %}
+        ➕ Add New Task
+    {% endif %} </h2>
+
+
+
+    <form method="POST" id="taskForm" class="task-form">
+        {% csrf_token %}
+         {% if task.instance.pk %}
+
+        <div class="form-group">
+            {{ task.title.label_tag }}
+            {{ task.title }}
+        </div>
+        
+        <div class="form-group disabled">
+            {{ task.task_type.label_tag }}
+            {{ task.task_type }}
+        </div>
+
+        <div class="form-group disabled" id="date-field" >
+            {{ task.start_date.label_tag }}
+            {{ task.start_date}}
+        </div>
+        {% else %}
+         <div class="form-group">
+            {{ task.title.label_tag }}
+            {{ task.title }}
+        </div>
+        
+        <div class="form-group">
+            {{ task.task_type.label_tag }}
+            {{ task.task_type }}
+        </div>
+
+        <div class="form-group" id="date-field">
+            {{ task.start_date.label_tag }}
+            {{ task.start_date }}
+        </div>
+        {%endif%}
+
+
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Task</button>
+            <a href="javascript:history.back()" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+
+</div>
+<script src="{% static 'js/add_task.js' %}"></script>
+{% endblock %}
+
+

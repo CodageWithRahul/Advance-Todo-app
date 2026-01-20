@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/regular_task.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="regular-page">
+
+    <!-- HEADER -->
+    <div class="regular-header">
+        <h2>🔁 Regular Tasks</h2>
+        <p>
+            These tasks repeat daily and are automatically added to your day.
+        </p>
+    </div>
+
+    <!-- TASK LIST -->
+    {% if reguTask %}
+        <div class="regular-list">
+
+            {% for task in reguTask %}
+            <div class="regular-item">
+
+                <div class="task-main">
+                    <a href="{% url 'update_task' task.id %}" class="task-title">
+                        {{ task.title }}
+                    </a>
+
+                    <span class="task-badge">
+                        Daily
+                    </span>
+                </div>
+
+                <div class="task-meta">
+                    <span class="task-note">
+                        Appears every day
+                    </span>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <div class="empty-state">
+            🌱 No regular tasks yet  
+            <br>
+            Create tasks that repeat every day
+        </div>
+    {% endif %}
+
+    <!-- FOOTER -->
+    <div class="page-footer">
+        <a href="{% url 'dashboard' %}" class="back-link">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

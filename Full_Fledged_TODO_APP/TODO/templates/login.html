@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+ <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2 class="auth-title">Welcome Back 👋</h2>
+        <p class="auth-subtitle">Login to manage your tasks</p>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+
+            <!-- Email -->
+            <div class="form-group">
+                {{ LForm.email }}
+            </div>
+
+            <!-- Password with eye -->
+            <div class="form-group password-wrapper">
+                {{ LForm.password }}
+                <span class="toggle-password" onclick="togglePassword()">Show</span>
+            </div>
+
+            <div class="remember-row">
+    <span>Remember me</span>
+    <label class="switch" >
+        <input type="checkbox" name="remember_me">
+        <span class="slider"></span>
+    </label>
+</div>
+
+            <button type="submit" class="btn-primary full-width">
+                Login
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+            <span>Don’t have an account?</span>
+            <a href="{% url 'user_signup' %}">Sign up</a>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/login.js'%}"></script>
+{% endblock %}

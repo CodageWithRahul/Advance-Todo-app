@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/task_history.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="history-container">
+
+    <div class="history-header">
+        <h2>📅 Task History</h2>
+        <p>View tasks for a specific date</p>
+    </div>
+
+    <form method="GET" class="date-form">
+        {% csrf_token %}
+        <input
+            type="date"
+            name="date"
+            value="{{ request.GET.date }}"
+            onchange="this.form.submit()"
+            required
+        >
+        <button type="submit">View</button>
+    </form>
+
+    {% if tasks %}
+        <h3 class="result-title">Tasks for {{ selected_date}}</h3>
+
+        <div class="table-wrapper">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Tasks</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>State</th>
+                        <th>Deleted At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr class="{% if task.is_deleted %}deletedRow{% elif task.status == 'DONE' %}done{% endif %}">
+                        <td>{{ forloop.counter }}</td>
+                        
+                        <td class="task-title"><a href="{% url 'task_details' task.id %}?from={{ request.path }}&{{ request.GET.urlencode }}">{{ task.task.title|capfirst }}</a></td>
+                        <td>{{ task.task.task_type }}</td>
+                        <td>
+                            <span class="status {{ task.status|lower }}">
+                                {{ task.status }}
+                            </span>
+                        </td>
+                        <td>{% if task.is_deleted == True %}
+                            <span class="status deleted ">DELETED</span>
+                            {%else%}
+                            <span class="status">ACTIVE</span>
+                            {%endif%}
+                        </td>
+                        <td style="text-align: center;">{%if task.deleted_at != None %}
+                            {{task.deleted_at |date:"d M Y h:i:s A"}}
+                            {% else %}
+                            -
+                            {%endif%}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% elif selected_date %}
+        <div class="no-data">
+            😴 No tasks found for this date
+        </div>
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+    </div>
+
+</div>
+{% endblock %}

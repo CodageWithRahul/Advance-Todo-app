@@ -1,0 +1,180 @@
+/* ===== Auth Container ===== */
+.auth-container {
+    max-width: 420px;
+    margin: 60px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Heading */
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 24px;
+    color: #111827;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 16px;
+}
+
+/* Labels */
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #374151;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #2563eb;
+}
+
+/* Password field wrapper (ONLY input + show) */
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 70px;
+}
+
+/* Show button */
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    top: 0;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+    user-select: none;
+}
+
+.toggle-password:hover {
+    text-decoration: underline;
+}
+
+/* Help text (password rules) */
+.help-text {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.help-text ul {
+    padding-left: 16px;
+    margin: 4px 0 0;
+}
+
+/* Errors */
+.errorlist {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #dc2626;
+    list-style: none;
+    padding-left: 0;
+}
+
+/* Submit button */
+.btn-primary {
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+}
+
+.btn-primary:hover {
+    background: #1e40af;
+}
+/* Input + Button inline wrapper */
+.inline-field {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Input takes remaining space */
+.inline-field input {
+    flex: 1;
+}
+
+/* OTP & Send buttons */
+.btn-outline {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid #2563eb;
+    background: white;
+    color: #2563eb;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-outline:hover {
+    background: #2563eb;
+    color: white;
+}
+
+/* Success (Verify button) */
+.btn-outline.success {
+    border-color: #16a34a;
+    color: #16a34a;
+}
+
+.btn-outline.success:hover {
+    background: #16a34a;
+    color: white;
+}
+
+/* Bottom link */
+.auth-link {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 13px;
+}
+
+.auth-link a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .auth-container {
+        margin: 30px 16px;
+        padding: 24px;
+    }
+}

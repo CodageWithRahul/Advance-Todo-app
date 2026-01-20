@@ -1,0 +1,162 @@
+.history-container {
+    max-width: 90%;
+    margin: 40px auto;
+}
+
+.history-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.history-header h2 {
+    font-size: 26px;
+    margin-bottom: 6px;
+}
+
+.history-header p {
+    font-size: 14px;
+    color: #6b7280;
+}
+.deletedRow{
+    background-color: #ffdbdb61;
+}
+/* Date form */
+.date-form {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.date-form input {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+}
+
+.date-form button {
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.date-form button:hover {
+    background: #1e40af;
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid black;
+    border-radius: 12px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.history-table th,
+.history-table td {
+    padding: 14px 12px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+}
+
+.history-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    text-align: center;
+}
+
+.task-title {
+    max-width: 320px;
+    word-wrap: break-word;
+}
+.task-title a {
+     text-decoration: none;
+     color: black;
+    font-weight: 600;
+
+}
+
+.history-table tr.done {
+    background: #f0fdf4;
+}
+
+
+/* Status badges */
+.status {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status.deleted {
+    background: rgba(255, 0, 0, 0.677);
+    color: #000000;
+}
+
+.status.done {
+    background: #dcfce7;
+    color: #166534;
+}
+
+
+.status.forwarded {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+/* Empty state */
+.no-data {
+    text-align: center;
+    padding: 30px;
+    background: #f9fafb;
+    border-radius: 12px;
+    color: #6b7280;
+}
+
+/* Back link */
+.back-link {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.back-link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .date-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .task-title {
+        max-width: 200px;
+    }
+}

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Todo App{% endblock %}</title>
+
+    <!-- BASE CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    {% block css %}{% endblock %}
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="{% url 'dashboard' %}" class="logo">📝 Todo</a>
+
+            {% if user.is_authenticated %}
+            <div class="nav-right">
+                <span class="username">
+                    Hi, <a href="{% url 'user_profile_view' %}">{{ user.first_name|default:user.username }} {{user.last_name}}</a>
+                </span>
+                <a href="{% url 'user_logout' %}" class="btn btn-danger">Logout</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+{% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>© {{ now|date:"Y" }} Todo App · Built with Django</p>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

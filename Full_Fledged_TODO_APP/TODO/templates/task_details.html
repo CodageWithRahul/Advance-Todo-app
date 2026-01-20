@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/task_details.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="task-detail-container">
+
+    <div class="task-card {{task.status | lower}}">
+        <div class="task-header">
+            <h2>{{ task.task.title|capfirst }} </h2>
+
+            {% if task.is_deleted %}
+                <span class="badge deleted">Deleted</span>
+            {% else %}
+                <span class="badge active">Active</span>
+            {% endif %}
+        </div>
+
+        <div class="task-info">
+            <div class="info-row">
+                <span class="label">Task Type</span>
+                <span class="value">
+                    {% if task.task.task_type == "FUTURE" %}
+                        Scheduled
+                    {% else %}
+                        {{ task.task.task_type }}
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Scheduled Date</span>
+                <span class="value">
+                    {% if task.task.start_date %}
+                        {{ task.task.start_date|date:"d M Y" }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Created At</span>
+                <span class="value">
+                    {{ task.task.created_at|date:"d M Y , h:i A" }}
+                </span>
+            </div>
+             {% if task.is_deleted %}
+                <div class="info-row">
+                <span class="label">Deleted At</span>
+                <span class="value">
+                    {{ task.deleted_at|date:"d M Y , h:i A" }}
+                </span>
+            </div>
+            {% endif %}
+            
+
+            <div class="info-row ">
+                <span class="label">Status</span>
+                <span class="value">
+                    {{task.status}}
+                </span>
+            </div>
+       <div class="info-row">
+    <span class="label">Remarks</span>
+
+    <span class="value">
+        <form method="POST" class="remarks-form">
+            {% csrf_token %}
+            <textarea 
+                name="remarks" 
+                id="remarks" 
+                placeholder="Enter any remarks"
+            >{{ task.remarks|default_if_none:"" }}</textarea>
+            <div class="remarks-actions">
+            <button type="submit" class="save-btn">Save</button>
+               </div>
+        </form>
+    </span>
+</div>
+        </div>
+
+        <div class="task-actions">
+
+
+        
+    
+
+    <div class="right-actions">
+        <a href="{{ request.GET.from|default:'/' }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn secondary">
+            ← Back
+        </a>
+
+        {% if source and 'task_history' not in source and task.status != "DONE" %}
+            <a href="{% url 'update_task' task.task.id %}" class="btn primary">
+                Edit Task
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+
+</div>
+{% endblock %}

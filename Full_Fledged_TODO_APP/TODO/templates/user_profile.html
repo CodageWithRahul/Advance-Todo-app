@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+
+    <div class="profile-header">
+        <h2>Account Overview</h2>
+        <p>Manage your personal information</p>
+    </div>
+
+    <div class="profile-section">
+
+        <div class="profile-row">
+            <span class="label">Full Name</span>
+            <span class="value">
+                {{ request.user.first_name }} {{ request.user.last_name|default:"—" }}
+            </span>
+        </div>
+
+        <div class="profile-row">
+            <span class="label">Email Address</span>
+            <span class="value">{{ request.user.email }}</span>
+        </div>
+
+        <div class="profile-row">
+            <span class="label">Date Joined</span>
+            <span class="value">
+                {{ request.user.date_joined|date:"d M Y, h:i A" }}
+            </span>
+        </div>
+
+        <div class="profile-row">
+            <span class="label">Last Login</span>
+            <span class="value">
+                {% if request.user.last_login %}
+                    {{ request.user.last_login|date:"d M Y, h:i A" }}
+                {% else %}
+                    Never
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="profile-actions">
+        <a href="{% url 'dashboard' %}" class="btn secondary">← Back</a>
+        <a href="{% url 'password_change' %}" class="btn primary">Change Password</a>
+    </div>
+
+</div>
+{% endblock %}

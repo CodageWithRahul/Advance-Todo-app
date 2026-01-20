@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/add_task.css' %}">
+{% endblock %}
+
+{% block content %}
+✏️  <h2 class="form-title"> 
+        {% if task.instance.pk %}
+        ✏️ Edit Task
+    {% else %}
+        ➕ Add New Task
+    {% endif %} </h2>
+
+<div class="form-group">
+    {{ task.title.label_tag }}
+    {{ task.title }}
+</div>
+
+<div class="form-group">
+    {{ task.title.label_tag }}
+    {{ task.title }}
+</div>
+
+{% if task.instance.pk %}
+    <!-- EDIT MODE -->
+
+    <div class="form-group">
+        {{ task.task_type.label_tag }}
+        {{ task.task_type.as_widget(attrs={'disabled': 'disabled'}) }}
+        <input type="hidden" name="task_type" value="{{ task.task_type.value }}">
+    </div>
+
+    <div class="form-group">
+        {{ task.start_date.label_tag }}
+        {{ task.start_date.as_widget(attrs={'readonly': 'readonly'}) }}
+    </div>
+
+{% else %}
+    <!-- ADD MODE -->
+
+    <div class="form-group">
+        {{ task.task_type.label_tag }}
+        {{ task.task_type }}
+    </div>
+
+    <div class="form-group">
+        {{ task.start_date.label_tag }}
+        {{ task.start_date }}
+    </div>
+{% endif %}
+<script src="{% static 'js/add_task.js' %}"></script>
+{% endblock %}

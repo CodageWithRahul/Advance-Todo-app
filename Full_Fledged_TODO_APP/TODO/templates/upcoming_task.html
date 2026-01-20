@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/upcoming_task.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="upcoming-page">
+
+    <!-- HEADER -->
+    <div class="upcoming-header">
+        <h2>📅 Upcoming Tasks</h2>
+        <p>
+            Future scheduled tasks only.<br>
+            <small class="note">
+                Regular tasks are shown on your dashboard and not listed here.
+            </small>
+        </p>
+    </div>
+
+    <!-- TASK LIST -->
+    {% if upTask %}
+        <div class="upcoming-list">
+
+            {% for task in upTask %}
+            <div class="upcoming-item">
+
+                <div class="task-main">
+                    <a href="{% url 'update_task' task.id %}" class="task-title">
+                        {{ task.title }}
+                    </a>
+
+                    <span class="task-type">
+                        {{ task.task_type }}
+                    </span>
+                </div>
+
+                <div class="task-meta">
+                    <span class="task-date">
+                        📆 {{ task.start_date|date:"d M Y" }}
+                    </span>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <div class="empty-state">
+            🎉 No upcoming tasks found
+        </div>
+    {% endif %}
+
+    <!-- FOOTER -->
+    <div class="page-footer">
+        <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+    </div>
+
+</div>
+
+{% endblock %}
