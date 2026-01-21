@@ -42,9 +42,11 @@ class loginForm(forms.Form):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = models.Task
-        fields = ['title', 'task_type', 'start_date']
+        fields = ['title', 'task_type', 'start_date','startTime','endTime']
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'startTime': forms.TimeInput(attrs={'type':'time'}),
+            'endTime': forms.TimeInput(attrs={'type':'time'}),
         }
 
     # def clean_start_date(self):

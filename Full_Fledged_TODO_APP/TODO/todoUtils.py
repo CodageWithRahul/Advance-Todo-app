@@ -26,3 +26,26 @@ def email_otp_deleter(dbTable,email):
     getMail.delete()
     
     
+    
+def is_conflicting(db_tasks, user_start, user_end):
+    if not user_start:
+        return False
+
+    # Normalize user time
+    user_end = user_end or user_start
+
+    for task in db_tasks:
+        db_start = task.startTime
+        db_end = task.endTime or db_start
+
+        # Defensive: skip invalid DB records
+        if not db_start:
+            continue
+
+        # Universal overlap check
+        if db_start <= user_end and user_start <= db_end:
+            return True
+
+    return False
+
+

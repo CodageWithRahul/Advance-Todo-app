@@ -38,6 +38,7 @@
                         <th>#</th>
                         <th>Task</th>
                         <th>Task Type</th>
+                        <th>Task Time</th>
                         <th>Status</th>
                         <th class="actions-cell">Action</th>
                     </tr>
@@ -62,6 +63,7 @@
                             {% endif %}
                         </td>
 
+
                         <td>
                             {% if task.task.task_type == "FUTURE" %}
                                 SCHEDULED
@@ -69,6 +71,8 @@
                                 {{ task.task.task_type }}
                             {% endif %}
                         </td>
+                        <td>{{task.startTime}} | {{task.endTime}}</td>
+
 
                         <td>
                             <span class="status {{ task.status|lower }}">
@@ -86,7 +90,8 @@
                                    role="button"
                                    aria-label="Delete task {{ task.task.title }}"
                                    class="action-link delete delete-btn"
-                                   data-task-id="{{ task.id }}">
+                                   data-task-id="{{ task.id }}"
+                                   data-created-today="{{ task.is_created_today|yesno:'true,false' }}">
                                     Delete
                                 </a>
                             </div>

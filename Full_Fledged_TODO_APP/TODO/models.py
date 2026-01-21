@@ -33,6 +33,8 @@ class Task(models.Model):
         blank=True,
         help_text="Used only for future tasks"
     )
+    startTime = models.TimeField(blank=True,null=True)
+    endTime = models.TimeField(blank=True,null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
@@ -69,6 +71,8 @@ class TaskInstance(models.Model):
         default=PENDING
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    startTime = models.TimeField(blank=True,null=True)
+    endTime = models.TimeField(blank=True,null=True)
     
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True,blank=True)

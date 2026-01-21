@@ -8,8 +8,12 @@ document.querySelectorAll(".delete-btn").forEach(btn => {
         e.preventDefault();
 
         const taskId = this.dataset.taskId;
+        const createdToday = this.dataset.createdToday === "true";
 
-        modalTitle.innerText = `Are you sure you want to delete ?`;
+        modalTitle.innerText = createdToday
+            ? "This task was created today. Deleting it will permanently remove it. Are you sure?"
+            : "Are you sure you want to delete this task?";
+
         deleteForm.action = `/task/delete/${taskId}/`;
         modal.style.display = "flex";
     });

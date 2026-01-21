@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import update_session_auth_hash
-from .todoUtils import upcoming_tasks,email_otp_gen,email_otp_deleter
+from .todoUtils import upcoming_tasks,email_otp_gen,email_otp_deleter,is_conflicting
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -93,7 +93,8 @@ def UserDashboard(request):
     Q(status=TaskInstance.FORWARDED) | Q(is_deleted=True)
     ).select_related("task").order_by('-status')
     upcomingTask  = upcoming_tasks(request.user,Task,Task.FUTURE,7)
-    
+    for task in tasks:
+        task.is_created_today = task.task.created_at.date() == date.today()
     return render(request,'dashboard.html',{
         'tasks':tasks,
         "todayDate":date.today(),
@@ -111,24 +112,49 @@ def UserLogout(request):
 @login_required(login_url='user_login')
 def add_task(request):
     if request.method == 'POST':
-        task = TaskForm(request.POST)
-        if task.is_valid():
-            task_type = task.cleaned_data.get('task_type').lower()
-            start_date = task.cleaned_data.get('start_date')
-            if task_type == "future":
-                if start_date <= date.today():
-                    messages.error(request,"Date must be > then Today")
+        form = TaskForm(request.POST)
+
+        if form.is_valid():
+            task_type = form.cleaned_data.get('task_type', '').lower()
+            start_date = form.cleaned_data.get('start_date')
+            start_time = form.cleaned_data.get('startTime')
+            end_time = form.cleaned_data.get('endTime')
+            print(start_time)
+            print(end_time)
+
+            today_tasks = TaskInstance.objects.filter(
+                user=request.user,
+                date=date.today()
+            ).exclude(
+                Q(status=TaskInstance.FORWARDED) | Q(is_deleted=True)
+            )
+
+            # 🔐 Time conflict check
+            if start_time:
+                if is_conflicting(today_tasks, start_time, end_time):
+                    messages.error(request, 'Your time is conflicting')
                     return redirect('add_task')
-            task = task.save(commit=False)
-            task.user = request.user   # VERY IMPORTANT (multi-tenant)
-            task.save()
-            create_task_instance(task)
-            return redirect('dashboard')    
-        else:
-            messages.error(request,'Somthing is wrong! | Task not added')
-    else : 
-        task = TaskForm()
-    return render(request,'task.html',{'task':task})
+
+            # 📅 Future task validation
+            if task_type == "future" and start_date <= date.today():
+                messages.error(request, "Date must be greater than today")
+                return redirect('add_task')
+
+            task_obj = form.save(commit=False)
+            task_obj.user = request.user
+            task_obj.save()
+
+            create_task_instance(task_obj)
+
+            return redirect('dashboard')
+
+        messages.error(request, 'Something went wrong! | Task not added')
+
+    else:
+        form = TaskForm()
+
+    return render(request, 'task.html', {'task': form})
+
 
 
 def create_task_instance(task):
@@ -139,6 +165,8 @@ def create_task_instance(task):
     if task.start_date is None or task.start_date == date.today():
         TaskInstance.objects.create(
             task=task,
+            startTime = task.startTime,
+            endTime = task.endTime,
             user=task.user,
             date=date.today(),
             status=TaskInstance.PENDING
@@ -165,19 +193,22 @@ def update_task(request,pk):
         
     else:
         task = TaskForm(instance=getTask)
-        print(task["start_date"])
     return render(request,'task.html',{'task':task})
 
 
 @login_required(login_url='user_login')
 def delete_task(request,pk):
     try:
-        getTask = get_object_or_404 (TaskInstance,id=pk,user=request.user)
+        getTask = TaskInstance.objects.get(id=pk,user=request.user)
     except TaskInstance.DoesNotExist:
         messages.error(request,"Task not found")
         return redirect('dashboard')
     
     if request.method == 'POST':
+        if getTask.task.created_at.date()== date.today():
+            getTask.delete()
+            getTask.task.delete()
+            return redirect('dashboard')
         getTask.is_deleted = True
         getTask.deleted_at = timezone.now()
 
@@ -221,12 +252,10 @@ def task_details_view(request,pk):
     if request.method == "POST":
         remark = request.POST.get('remarks')
         task.remarks = remark
-        print(remark)
         task.save()
 
     source = request.GET.get("from")
-    print(source)
-
+    
     return render(request, "task_details.html", {
         "task": task,
         "source": source
@@ -301,8 +330,6 @@ def loader(request):
 @login_required(login_url='user_login')
 def task_history(request):
     date = request.GET.get("date")
-    print(date)
-
     tasks = (
         TaskInstance.objects
         .select_related("task")
