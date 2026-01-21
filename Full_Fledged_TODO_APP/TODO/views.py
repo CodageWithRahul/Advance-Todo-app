@@ -134,7 +134,7 @@ def add_task(request):
 def create_task_instance(task):
     """
     Create TaskInstance ONLY if task is for today
-    Future tasks will be handled later by scheduler/login logic
+    Future tasks will be handled later by scheduler/login logic test
     """
     if task.start_date is None or task.start_date == date.today():
         TaskInstance.objects.create(
