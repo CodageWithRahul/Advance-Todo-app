@@ -1,166 +1,124 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-<link rel="stylesheet" href="{% static 'css/modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
 {% endblock %}
-
 {% block content %}
-
-<div class="dashboard-layout">
-
+  <div class="dashboard-layout">
     <!-- MAIN CONTENT -->
     <div class="dashboard-main">
-
-        <!-- HEADER -->
-        <div class="dashboard-header">
-            <h2>Today’s Tasks  | {{ todayDate|date:"d:m:Y" }}</h2>
-
-            <div class="header-actions">
-                <a href="{% url 'regular_tasks' %}" class="btn btn-secondary">
-                   🔁 Regular Tasks
-                </a>
-                <a href="{% url 'task_history' %}" class="btn btn-secondary">
-                    📅 Task History
-                </a>
-                <a href="{% url 'add_task' %}" class="btn btn-primary">
-                    ➕ Add Task
-                </a>
-            </div>
+      <!-- HEADER -->
+      <div class="dashboard-header">
+        <h2>Today’s Tasks | {{ todayDate|date:'d:m:Y' }}</h2>
+        <div class="header-actions">
+          <a href="{% url 'regular_tasks' %}" class="btn btn-secondary">🔁 Regular Tasks</a>
+          <a href="{% url 'task_history' %}" class="btn btn-secondary">📅 Task History</a>
+          <a href="{% url 'add_task' %}" class="btn btn-primary">➕ Add Task</a>
         </div>
-
-        <!-- TASK TABLE -->
-        <div class="task-table-wrapper">
-            <table class="task-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Task</th>
-                        <th>Task Type</th>
-                        <th>Task Time</th>
-                        <th>Status</th>
-                        <th class="actions-cell">Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for task in tasks %}
-                    <tr class="{% if task.status == 'DONE' %}task-done{% endif %}">
-                        <td>{{ forloop.counter }}</td>
-
-                        <td class="task-title">
-                            {% if task.status == 'DONE' %}
-                                <strike>
-                                    <a href="{% url 'task_details' task.id %}?from={{ request.path }}&{{ request.GET.urlencode }}">
-                                        {{ task.task.title|capfirst }}
-                                    </a>
-                                </strike>
-                            {% else %}
-                                <a href="{% url 'task_details' task.id %}?from={{ request.path }}&{{ request.GET.urlencode }}">
-                                    {{ task.task.title|capfirst }}
-                                </a>
-                            {% endif %}
-                        </td>
-
-
-                        <td>
-                            {% if task.task.task_type == "FUTURE" %}
-                                SCHEDULED
-                            {% else %}
-                                {{ task.task.task_type }}
-                            {% endif %}
-                        </td>
-                        <td>{{task.startTime}} | {{task.endTime}}</td>
-
-
-                        <td>
-                            <span class="status {{ task.status|lower }}">
-                                {{ task.status }}
-                            </span>
-                        </td>
-
-                        <td class="actions-cell">
-                            <div class="actions">
-                                <a href="{% url 'mark_done' task.id %}" class="action-link">
-                                    {% if task.status == "DONE" %}Undo{% else %}Done{% endif %}
-                                </a>
-
-                                <a href="#"
-                                   role="button"
-                                   aria-label="Delete task {{ task.task.title }}"
-                                   class="action-link delete delete-btn"
-                                   data-task-id="{{ task.id }}"
-                                   data-created-today="{{ task.is_created_today|yesno:'true,false' }}">
-                                    Delete
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="empty">
-                            🎉 No tasks for today
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
+      </div>
+      <!-- TASK TABLE -->
+      <div class="task-table-wrapper">
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Task</th>
+              {% comment %} <th>Task Type</th> {% endcomment %}
+              <th>Task Time</th>
+              <th>Status</th>
+              <th class="actions-cell">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+              <tr class="{% if task.status == 'DONE' %}task-done{% endif %}">
+                <td>{{ forloop.counter }}</td>
+                <td class="task-title">
+                  {% if task.status == 'DONE' %}
+                    <strike><a href="{% url 'task_details' task.id %}">{{ task.task.title|capfirst }}</a></strike>
+                  {% else %}
+                    <a href="{% url 'task_details' task.id %}">{{ task.task.title|capfirst }}</a>
+                  {% endif %}
+                  <!-- Task type (sub text) -->
+                  {% comment %} <div class="task-type">
+                    {% if task.task.task_type == 'FUTURE' %}
+                      Scheduled
+                    {% else %}
+                      {{ task.task.task_type|capfirst }}
+                    {% endif %}
+                  </div> {% endcomment %}
+                </td>
+                <td class="task-time">
+                  <span class="time">{{ task.startTime|time:'h:i' }}</span>
+                  <span class="time-separator">–</span>
+                  <span class="time">{{ task.endTime|time:'h:i' }}</span>
+                </td>
+                <td>
+                  <span class="status {{ task.status|lower }}">{{ task.status }}</span>
+                </td>
+                <td class="actions-cell">
+                  <div class="actions">
+                    <a href="{% url 'mark_done' task.id %}" class="action-link">
+                      {% if task.status == 'DONE' %}
+                        Undo
+                      {% else %}
+                        Done
+                      {% endif %}
+                    </a>
+                    <a href="#"
+                       role="button"
+                       aria-label="Delete task {{ task.task.title }}"
+                       class="action-link delete delete-btn"
+                       data-task-id="{{ task.id }}"
+                       data-created-today="{{ task.is_created_today|yesno:'true,false' }}">Delete</a>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="empty">🎉 No tasks for today</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-
     <!-- SIDE PANEL : UPCOMING TASKS -->
     <aside class="dashboard-side">
-
-        <div class="side-header">
-            <h3>📅 Upcoming Tasks</h3>
-            <span class="side-subtitle">Next 7 days</span>
+      <div class="side-header">
+        <h3>📅 Upcoming Tasks</h3>
+        <span class="side-subtitle">Next 7 days</span>
+      </div>
+      {% if upcomingTask %}
+        <ul class="upcoming-list">
+          {% for task in upcomingTask %}
+            <li class="upcoming-item">
+              <a href="{% url 'update_task' task.id %}">{{ task.title|capfirst }}</a>
+              <span class="upcoming-date">{{ task.start_date|date:'d M' }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="side-footer">
+          <a href="{% url 'upcoming_task' %}" class="more-link">View all upcoming →</a>
         </div>
-
-        {% if upcomingTask %}
-            <ul class="upcoming-list">
-                {% for task in upcomingTask %}
-                <li class="upcoming-item">
-                    <a href="{% url 'update_task' task.id %}">
-                        {{ task.title|capfirst }}
-                    </a>
-                    <span class="upcoming-date">
-                        {{ task.start_date|date:"d M" }}
-                    </span>
-                </li>
-                {% endfor %}
-            </ul>
-
-            <div class="side-footer">
-                <a href="{% url 'upcoming_task' %}" class="more-link">
-                    View all upcoming →
-                </a>
-            </div>
-        {% else %}
-            <p class="side-empty">No upcoming tasks</p>
-        {% endif %}
-
+      {% else %}
+        <p class="side-empty">No upcoming tasks</p>
+      {% endif %}
     </aside>
-
-</div>
-
-<!-- DELETE CONFIRMATION MODAL -->
-<div id="deleteModal" class="modal">
+  </div>
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div id="deleteModal" class="modal">
     <div class="modal-content">
-        <h3 id="modal-title"></h3>
-
-        <form method="POST" id="deleteForm">
-            {% csrf_token %}
-            <div class="modal-actions">
-                <button type="submit" class="btn danger">Yes, Delete</button>
-                <button type="button" class="btn" id="cancelBtn">Cancel</button>
-            </div>
-        </form>
+      <h3 id="modal-title"></h3>
+      <form method="POST" id="deleteForm">
+        {% csrf_token %}
+        <div class="modal-actions">
+          <button type="submit" class="btn danger">Yes, Delete</button>
+          <button type="button" class="btn" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
     </div>
-</div>
-
-<script src="{% static 'js/delete-modal.js' %}"></script>
-
+  </div>
+  <script src="{% static 'js/delete-modal.js' %}"></script>
 {% endblock %}

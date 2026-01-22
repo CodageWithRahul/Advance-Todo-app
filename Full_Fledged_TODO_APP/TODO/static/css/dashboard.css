@@ -271,6 +271,36 @@
     color: #6b7280;
     margin-top: 12px;
 }
+/* =====================
+   TASK TYPE (SUBTITLE)
+===================== */
+
+.task-type {
+    font-size: 12px;
+    color: #6b7280;  /* soft gray */
+    margin-top: 4px;
+    text-transform: capitalize;
+}
+
+/* =====================
+   TASK TIME (BEAUTIFIED)
+===================== */
+
+.task-time {
+    font-size: 13px;
+    color: #374151;
+    white-space: nowrap;
+}
+
+.task-time .time {
+    font-weight: 500;
+}
+
+.task-time .time-separator {
+    margin: 0 6px;
+    color: #9ca3af;
+}
+
 
 /* =====================
    RESPONSIVE
