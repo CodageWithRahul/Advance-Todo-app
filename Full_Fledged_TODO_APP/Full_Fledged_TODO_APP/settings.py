@@ -124,7 +124,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "/static/"
+
+# Where Django will collect static files (Render / production)
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Where Django will look for static files (local + apps)
+STATICFILES_DIRS = [
+    os.path.join(
+        BASE_DIR, "static"
+    ),  # optional, only if you have a global static folder
+]
 
 
 REST_FRAMEWORK = {
