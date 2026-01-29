@@ -20,7 +20,8 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import smtplib
 from django.db import transaction
-import logging, socket
+import logging, socket, threading
+
 
 logger = logging.getLogger(__name__)
 
@@ -392,7 +393,7 @@ def send_mail_otp_view(request):
                 email=email.lower(), defaults={"otp": otp, "is_verified": False}
             )
 
-            sendMailOTP(email=email, name=full_name, otp=otp)
+            sendMailOTP_async(email=email, name=full_name, otp=otp)
 
     except smtplib.SMTPException:
         return JsonResponse(
@@ -434,6 +435,10 @@ def sendMailOTP(email, name, otp):
     except (socket.timeout, Exception) as e:
         print("EMAIL ERROR:", e)
         raise
+
+
+def sendMailOTP_async(*args, **kwargs):
+    threading.Thread(target=sendMailOTP, args=args, kwargs=kwargs, daemon=True).start()
 
 
 @require_POST
