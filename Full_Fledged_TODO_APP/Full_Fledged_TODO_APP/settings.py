@@ -155,6 +155,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = "codagewithrahul23@gmail.com"
-EMAIL_HOST_PASSWORD = "ewkohnmgfgpryyhg"
+# EMAIL_HOST_PASSWORD = "ewkohnmgfgpryyhg" #old
+EMAIL_HOST_PASSWORD = "iqnr xcgt mbca xkdb"  # new
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 PASSWORD_RESET_TIMEOUT = 60 * 5
