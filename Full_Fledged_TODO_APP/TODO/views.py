@@ -419,7 +419,8 @@ def sendMailOTP(email, name, otp):
         "emailAuth/email_otp_sender.html", {"name": name, "otp": otp}
     )
 
-    from_email = settings.EMAIL_HOST_USER
+    from_email = settings.DEFAULT_FROM_EMAIL
+
     recipient = [email]
 
     mail = EmailMessage(subject, bodymess, from_email, recipient)
