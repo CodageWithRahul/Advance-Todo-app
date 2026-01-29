@@ -431,10 +431,10 @@ def sendMailOTP(email, name, otp):
     mail.content_subtype = "html"
 
     try:
-        mail.send(fail_silently=False)
-    except (socket.timeout, Exception) as e:
-        print("EMAIL ERROR:", e)
-        raise
+        mail.send()
+        logger.info(f"OTP email sent to {email}")
+    except Exception as e:
+        logger.error(f"EMAIL FAILED for {email}: {e}", exc_info=True)
 
 
 def sendMailOTP_async(*args, **kwargs):
