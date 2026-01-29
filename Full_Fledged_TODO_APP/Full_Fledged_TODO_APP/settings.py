@@ -28,8 +28,7 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") == "True"
-
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -123,17 +122,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+# STATIC_URL = "/static/"
+# STATICFILES_DIRS = [BASE_DIR / "static"]
+
 STATIC_URL = "/static/"
 
-# Where Django will collect static files (Render / production)
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# Where Django will look for static files (local + apps)
-STATICFILES_DIRS = [
-    os.path.join(
-        BASE_DIR, "static"
-    ),  # optional, only if you have a global static folder
-]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 REST_FRAMEWORK = {
