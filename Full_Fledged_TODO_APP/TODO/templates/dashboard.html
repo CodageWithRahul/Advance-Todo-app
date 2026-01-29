@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 {% block css %}
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
   <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
-{% endblock %}
+{% endblock css %}
 {% block content %}
   <div class="dashboard-layout">
     <!-- MAIN CONTENT -->
@@ -111,7 +111,7 @@
   <div id="deleteModal" class="modal">
     <div class="modal-content">
       <h3 id="modal-title"></h3>
-      <form method="POST" id="deleteForm">
+      <form method="post" id="deleteForm">
         {% csrf_token %}
         <div class="modal-actions">
           <button type="submit" class="btn danger">Yes, Delete</button>
@@ -121,4 +121,4 @@
     </div>
   </div>
   <script src="{% static 'js/delete-modal.js' %}"></script>
-{% endblock %}
+{% endblock content %}

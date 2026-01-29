@@ -124,15 +124,15 @@ def add_task(request):
 
             # 🔐 Time conflict check
             if start_time:
-                if (
-                    start_time < datetime.now().time().replace(microsecond=0)
-                    and task_type != "future"
-                ):
-                    messages.error(
-                        request,
-                        "You cannot create a task for a time that has already passed.",
-                    )
-                    return redirect("add_task")
+                # if (
+                #     start_time < datetime.now().time().replace(microsecond=0)
+                #     and task_type != "future"
+                # ):
+                #     messages.error(
+                #         request,
+                #         "You cannot create a task for a time that has already passed.",
+                #     )
+                #     return redirect("add_task")
                 conflictTask = is_conflicting(today_tasks, start_time, end_time)
                 if conflictTask != None:
                     print(conflictTask.task.title)
@@ -298,11 +298,11 @@ def loader(request):
         is_active=True,
     ).exclude(is_deleted=True)
 
-    for task in tasks:
+    for Ftask in tasks:
         TaskInstance.objects.get_or_create(
-            startTime=task.startTime,
-            endTime=task.endTime,
-            task=task,
+            startTime=Ftask.startTime,
+            endTime=Ftask.endTime,
+            task=Ftask,
             user=request.user,
             date=date.today(),
             defaults={"status": "PENDING"},
@@ -315,8 +315,8 @@ def loader(request):
 
     for rTask in regular_task:
         TaskInstance.objects.get_or_create(
-            startTime=task.startTime,
-            endTime=task.endTime,
+            startTime=rTask.startTime,
+            endTime=rTask.endTime,
             task=rTask,
             user=request.user,
             date=today,
