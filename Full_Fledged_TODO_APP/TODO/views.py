@@ -360,6 +360,8 @@ def user_profile_view(request):
 
 @require_POST
 def send_mail_otp_view(request):
+    print("EMAIL_HOST_USER:", settings.EMAIL_HOST_USER)
+    print("EMAIL_HOST_PASSWORD exists:", bool(settings.EMAIL_HOST_PASSWORD))
     email = request.POST.get("email")
     fname = request.POST.get("first_name", "")
     lname = request.POST.get("last_name", "")
