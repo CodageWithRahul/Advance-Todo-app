@@ -20,6 +20,9 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import smtplib
 from django.db import transaction
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def UserSignUp(request):
@@ -360,8 +363,10 @@ def user_profile_view(request):
 
 @require_POST
 def send_mail_otp_view(request):
-    print("EMAIL_HOST_USER:", settings.EMAIL_HOST_USER)
-    print("EMAIL_HOST_PASSWORD exists:", bool(settings.EMAIL_HOST_PASSWORD))
+    logger.info("📨 Entered sendMailOTP")
+
+    logger.info(f"EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
+    logger.info(f"EMAIL_HOST_PASSWORD exists: {bool(settings.EMAIL_HOST_PASSWORD)}")
     email = request.POST.get("email")
     fname = request.POST.get("first_name", "")
     lname = request.POST.get("last_name", "")
