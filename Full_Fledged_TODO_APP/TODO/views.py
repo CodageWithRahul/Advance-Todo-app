@@ -20,7 +20,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import smtplib
 from django.db import transaction
-import logging, socket, threading
+import logging, socket, threading, requests
 
 
 logger = logging.getLogger(__name__)
@@ -414,27 +414,58 @@ def send_mail_otp_view(request):
     )
 
 
+# def sendMailOTP(email, name, otp):
+#     subject = f"Welcome {name} To our Platform"
+
+#     bodymess = render_to_string(
+#         "emailAuth/email_otp_sender.html",
+#         {"name": name, "otp": otp},
+#     )
+
+#     mail = EmailMessage(
+#         subject,
+#         bodymess,
+#         settings.DEFAULT_FROM_EMAIL,
+#         [email],
+#     )
+#     mail.content_subtype = "html"
+
+#     try:
+#         mail.send()
+#         logger.info(f"OTP email sent to {email}")
+#     except Exception as e:
+#         logger.error(f"EMAIL FAILED for {email}: {e}", exc_info=True)
+
+
 def sendMailOTP(email, name, otp):
-    subject = f"Welcome {name} To our Platform"
+    url = "https://api.brevo.com/v3/smtp/email"
 
-    bodymess = render_to_string(
-        "emailAuth/email_otp_sender.html",
-        {"name": name, "otp": otp},
-    )
+    headers = {
+        "accept": "application/json",
+        "api-key": settings.BREVO_API_KEY,
+        "content-type": "application/json",
+    }
 
-    mail = EmailMessage(
-        subject,
-        bodymess,
-        settings.DEFAULT_FROM_EMAIL,
-        [email],
-    )
-    mail.content_subtype = "html"
+    payload = {
+        "sender": {
+            "name": "TaskTodo",
+            "email": settings.DEFAULT_FROM_EMAIL,  # must be verified in Brevo
+        },
+        "to": [{"email": email, "name": name}],
+        "subject": f"Welcome {name}",
+        "htmlContent": f"""
+            <h2>Email Verification</h2>
+            <p>Hello {name},</p>
+            <p>Your OTP is:</p>
+            <h1>{otp}</h1>
+            <p>This OTP is valid for 5 minutes.</p>
+        """,
+    }
 
-    try:
-        mail.send()
-        logger.info(f"OTP email sent to {email}")
-    except Exception as e:
-        logger.error(f"EMAIL FAILED for {email}: {e}", exc_info=True)
+    response = requests.post(url, json=payload, headers=headers)
+
+    if response.status_code >= 400:
+        raise Exception(f"Brevo error: {response.text}")
 
 
 def sendMailOTP_async(*args, **kwargs):
