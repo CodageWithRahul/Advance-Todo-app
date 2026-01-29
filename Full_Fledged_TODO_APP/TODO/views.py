@@ -419,7 +419,8 @@ def sendMailOTP(email, name, otp):
 
     mail = EmailMessage(subject, bodymess, from_email, recipient)
     mail.content_subtype = "html"
-    mail.send(fail_silently=False)
+    mail.send()
+    # mail.send(fail_silently=False)
 
 
 @require_POST
