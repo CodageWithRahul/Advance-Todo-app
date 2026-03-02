@@ -105,3 +105,14 @@ Task categorization & tagging system
 📸 Screenshots
 🔐 Login Page
 <img width="1919" height="868" alt="login_page" src="https://github.com/user-attachments/assets/ce9acdca-70e4-45c7-9abb-bcdb0f768d1b" />
+📊 Dashboard
+<img width="1919" height="866" alt="dashboard2" src="https://github.com/user-attachments/assets/5cdb267d-adc9-4d21-b2c9-d03ed5d1cec3" />
+➕ Add Task
+<img width="1919" height="870" alt="add_task" src="https://github.com/user-attachments/assets/9b92866e-1158-4352-a4fa-3896b36c4496" />
+📜 Task History
+<img width="1919" height="866" alt="task_history2" src="https://github.com/user-attachments/assets/8f0a3bca-1f53-4273-b46c-9754d9018723" />
+Regular Task's
+<img width="1917" height="869" alt="regular_page" src="https://github.com/user-attachments/assets/c10fbd59-4236-4ed3-884d-dcd90aac2a78" />
+⚙ Account Information
+<img width="1919" height="867" alt="account_info" src="https://github.com/user-attachments/assets/dc51e1f3-7111-4b34-84bb-0145c39959bf" />
+
