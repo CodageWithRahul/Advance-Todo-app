@@ -121,3 +121,8 @@ Task categorization & tagging system
 <p align="center"> <img src="https://github.com/user-attachments/assets/dc51e1f3-7111-4b34-84bb-0145c39959bf" width="900"> </p>
 ☁ Deployment
 Deployed on Render Cloud with PostgreSQL database integration and production-ready configuration.
+
+
+🤝 Let's Improve This Together
+
+If you believe something can be improved or have feature suggestions, feel free to open an issue or connect with me. I’m always open to feedback and collaboration to enhance the user experience.
