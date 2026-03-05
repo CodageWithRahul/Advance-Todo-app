@@ -4,9 +4,8 @@
 
 .container {
     max-width: 100%;
-    margin: 30px auto;
+    margin: 5px auto;
 }
-
 /* MAIN + SIDE LAYOUT */
 .dashboard-layout {
     display: flex;
@@ -19,19 +18,213 @@
     flex: 3;
     min-width: 0; /* for long content */
     height: calc(100vh - 120px); /* adjust based on header/navbar */
-    overflow-y: auto;
+    overflow-y: hidden;
     padding-right: 6px; /* avoids scrollbar overlap */
 }
 
+/* ============================= */
 /* SIDE PANEL */
+/* ============================= */
+
 .dashboard-side {
-    flex: 1;
+    flex: 1.1;
     background: #ffffff;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 16px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
     position: sticky;
     top: 90px;
+
+    height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ============================= */
+/* SIDE CARD */
+/* ============================= */
+
+.side-card {
+    flex: 1;                 /* each section shares space */
+    display: flex;
+    flex-direction: column;
+    min-height: 0;           /* VERY IMPORTANT for scroll */
+}
+
+/* ============================= */
+/* SCROLLABLE CONTENT AREAS */
+/* ============================= */
+
+.upcoming-list,
+.goals-wrapper {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+/* ============================= */
+/* SIDE CARD (SECTION WRAPPER) */
+/* ============================= */
+
+.side-card {
+    margin-top: 24px;
+}
+
+/* First section shouldn't have margin */
+.side-card:first-child {
+    margin-top: 0;
+}
+
+/* ============================= */
+/* GOALS CARD */
+/* ============================= */
+
+.goal-card {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1f2937;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+/* Small hover */
+.goal-card:hover {
+    background: #f9fafb;
+    transform: translateX(3px);
+}
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+.side-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.side-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #065f46;
+}
+
+/* Small Button */
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+/* ============================= */
+/* GOALS WRAPPER */
+/* ============================= */
+
+.goals-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ============================= */
+/* GOALS CARD (COMPACT) */
+/* ============================= */
+
+.goals-card {
+    padding: 14px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border: 1px solid #d1fae5;
+}
+
+/* Header smaller spacing */
+.goals-card .side-header {
+    margin-bottom: 10px;
+}
+
+.goals-card h3 {
+    font-size: 14px;
+}
+
+/* ============================= */
+/* GOALS WRAPPER */
+/* ============================= */
+
+.goals-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    /* show approx 5 items */
+    max-height: 240px;
+    overflow-y: auto;
+    padding-right: 4px; /* space for scrollbar */
+}
+
+/* Scrollbar styling (optional but clean) */
+.goals-wrapper::-webkit-scrollbar {
+    width: 5px;
+}
+
+.goals-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* ============================= */
+/* GOAL CARD SMALLER */
+/* ============================= */
+
+.goal-card {
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.goal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Goal title smaller */
+.goal-info h4 {
+    font-size: 13px;
+}
+
+/* Smaller tag */
+.goal-tag {
+    font-size: 9px;
+    padding: 2px 7px;
+}
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+
+.side-footer {
+    margin-top: 14px;
+}
+
+.more-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: #047857;
+    text-decoration: none;
+}
+
+.more-link:hover {
+    text-decoration: underline;
 }
 
 /* =====================
@@ -85,8 +278,32 @@
 .task-table-wrapper {
     background: #ffffff;
     border-radius: 10px;
-    overflow-x: auto;
     box-shadow: 5px 9px 7px rgba(0, 0, 0, 0.08);
+
+    /* ⭐ This is important */
+    overflow-x: auto;
+}
+
+/* Table should not break */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* min-width: 600px; Prevents mobile column collapse */
+}
+
+/* Scroll tbody but keep structure stable */
+tbody {
+    display: block;
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+/* Fix header alignment */
+thead tr,
+tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
 /* =====================
@@ -96,7 +313,7 @@
 .task-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px;
+    /* min-width: 700px; */
 }
 
 .task-table thead {
@@ -206,70 +423,66 @@
 /* =====================
    UPCOMING SIDE PANEL
 ===================== */
-
-.side-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.side-subtitle {
-    font-size: 12px;
-    color: #6b7280;
-}
+/* ============================= */
+/* UPCOMING SECTION */
+/* ============================= */
 
 .upcoming-list {
     list-style: none;
     padding: 0;
-    margin-top: 14px;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
 }
 
+/* Each item */
 .upcoming-item {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     gap: 10px;
     padding: 8px 0;
+    text-decoration: none;
     border-bottom: 1px solid #f1f1f1;
+    transition: background 0.2s ease;
 }
 
-.upcoming-item a {
+.upcoming-item:last-child {
+    border-bottom: none;
+}
+
+.upcoming-item:hover {
+    background: #f8fafc;
+}
+
+/* Date box */
+.upcoming-date-box {
+    width: 40px;
+    min-width: 40px;
+    text-align: center;
+    background: #e0f2fe;
+    border-radius: 8px;
+    padding: 4px 0;
+}
+
+.upcoming-date-box .day {
+    display: block;
     font-size: 14px;
+    font-weight: 700;
+    color: #0284c7;
+}
+
+.upcoming-date-box .month {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #0369a1;
+}
+
+/* Task title */
+.upcoming-info {
+    font-size: 13px;
     font-weight: 500;
     color: #1f2937;
-    text-decoration: none;
-    word-break: break-word;
-}
-
-.upcoming-item a:hover {
-    text-decoration: underline;
-}
-
-.upcoming-date {
-    font-size: 12px;
-    color: #6b7280;
-    white-space: nowrap;
-}
-
-.side-footer {
-    margin-top: 12px;
-    text-align: right;
-}
-
-.more-link {
-    font-size: 13px;
-    color: #4f46e5;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-.more-link:hover {
-    text-decoration: underline;
-}
-
-.side-empty {
-    font-size: 14px;
-    color: #6b7280;
-    margin-top: 12px;
 }
 /* =====================
    TASK TYPE (SUBTITLE)
@@ -318,11 +531,38 @@
     .dashboard-side {
         position: static;
         width: 100%;
+        height: calc(100vh - 120px);
     }
 
     .dashboard-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+    }
+
+        /* Hide all columns */
+    .task-table th,
+    .task-table td {
+        display: none;
+    }
+
+    /* Show only task column */
+    .task-table th:nth-child(2),
+    .task-table td:nth-child(2),
+    .task-table th:nth-child(5),
+    .task-table td:nth-child(5) {
+        display: table-cell;
+        width: 100%;
+    }
+
+    /* Make task title bigger for mobile */
+    .task-title a {
+        font-size: 16px;
+        font-weight: 500;
+        display: block;
+        padding: 10px 0;
+    }
+     .task-table tbody tr {
+        border-bottom: 1px solid #eee;
     }
 }

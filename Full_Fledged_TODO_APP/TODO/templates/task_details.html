@@ -55,18 +55,22 @@
                         <form method="post" class="remarks-form">
                             {% csrf_token %}
                             <textarea name="remarks" id="remarks" placeholder="Enter any remarks">{{ task.remarks|default_if_none:"" }}</textarea>
-                            <div class="remarks-actions">
-                                <button type="submit" class="save-btn">Save</button>
-                            </div>
+                            {% if source == "dashboard" %}
+                                <div class="remarks-actions">
+                                    <button type="submit" class="save-btn">Save</button>
+                                </div>
+                            {% endif %}
                         </form>
                     </span>
                 </div>
             </div>
             <div class="task-actions">
                 <div class="right-actions">
-                    <a href="{{ request.GET.from|default:'/' }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
+                    <!-- Back Button -->
+                    <a href="{% if source %}javascript:history.back(){% else %}/{% endif %}"
                        class="btn secondary">← Back</a>
-                    {% if source and 'task_history' not in source and task.status != "DONE" %}
+                    <!-- Show Edit Button only if coming from dashboard -->
+                    {% if source == "dashboard" and task.status != "DONE" %}
                         <a href="{% url 'update_task' task.task.id %}" class="btn primary">Edit Task</a>
                     {% endif %}
                 </div>

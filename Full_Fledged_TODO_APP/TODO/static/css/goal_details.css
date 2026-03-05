@@ -1,0 +1,77 @@
+.goal-detail-wrapper{
+    max-width: 800px;
+    margin: auto;
+    padding: 30px;
+}
+
+.goal-card{
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    padding: 25px;
+}
+
+.goal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.goal-header h2{
+    font-size:26px;
+}
+
+.badge{
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+.badge.done{
+    background:#e6f7ed;
+    color:#1fa45b;
+}
+
+.badge.pending{
+    background:#fff4e6;
+    color:#ff9800;
+}
+
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.label{
+    color:#777;
+}
+
+.value{
+    font-weight:500;
+}
+
+.goal-actions{
+    display:flex;
+    justify-content:space-between;
+    margin-top:25px;
+}
+
+.btn{
+    padding:10px 22px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:500;
+}
+
+.btn.primary{
+    background:#4CAF50;
+    color:white;
+}
+
+.btn.secondary{
+    background:#f1f1f1;
+    color:#333;
+}

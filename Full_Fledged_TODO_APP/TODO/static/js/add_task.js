@@ -17,3 +17,25 @@ document.addEventListener("DOMContentLoaded", function () {
     taskTypeSelect.addEventListener("change", toggleDateField);
     toggleDateField(); // run on page load
 });
+
+
+function showConflictModal(){
+    document.getElementById("conflictModal").style.display="flex";
+}
+
+function closeConflictModal(){
+    document.getElementById("conflictModal").style.display="none";
+}
+
+function forceSubmit() {
+    const form = document.getElementById("taskForm");
+
+    let input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "force_save";
+    input.value = "1";
+
+    form.appendChild(input);
+
+    form.submit();
+}

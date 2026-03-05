@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, loginForm, TaskForm
-from .models import Task, TaskInstance, UserDailyState, EmailOtp
+from .forms import SignUpForm, loginForm, TaskForm, GoalForm
+from .models import Task, TaskInstance, UserDailyState, EmailOtp, Goals
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -21,6 +21,7 @@ from django.core.exceptions import ValidationError
 import smtplib
 from django.db import transaction
 import logging, socket, threading, requests
+from django.db.models import Case, When, IntegerField, Value
 
 
 logger = logging.getLogger(__name__)
@@ -93,15 +94,29 @@ def UserDashboard(request):
         TaskInstance.objects.filter(user=request.user, date=date.today())
         .exclude(Q(status=TaskInstance.FORWARDED) | Q(is_deleted=True))
         .select_related("task")
-        .order_by("-status")
+        .annotate(
+            status_order=Case(
+                When(status=TaskInstance.PENDING, then=Value(1)),
+                When(status=TaskInstance.DONE, then=Value(2)),
+                default=Value(3),
+                output_field=IntegerField(),
+            )
+        )
+        .order_by("status_order", "task__startTime")
     )
     upcomingTask = upcoming_tasks(request.user, Task, Task.FUTURE, 7)
     for task in tasks:
         task.is_created_today = task.task.created_at.date() == date.today()
+    goals = Goals.objects.filter(user=request.user, isDone=False, isDelete=False)
     return render(
         request,
         "dashboard.html",
-        {"tasks": tasks, "todayDate": date.today(), "upcomingTask": upcomingTask},
+        {
+            "tasks": tasks,
+            "todayDate": date.today(),
+            "upcomingTask": upcomingTask,
+            "priority_goals": goals,
+        },
     )
 
 
@@ -113,56 +128,49 @@ def UserLogout(request):
 
 @login_required(login_url="user_login")
 def add_task(request):
+    conflict_task = None
+    form = TaskForm(request.POST or None)
+
     if request.method == "POST":
-        form = TaskForm(request.POST)
 
         if form.is_valid():
+
             task_type = form.cleaned_data.get("task_type", "").lower()
             start_date = form.cleaned_data.get("start_date")
             start_time = form.cleaned_data.get("startTime")
             end_time = form.cleaned_data.get("endTime")
+            if task_type == "future":
+                future_tasks = Task.objects.filter(
+                    user=request.user, start_date=start_date, is_deleted=False
+                )
 
-            today_tasks = TaskInstance.objects.filter(
-                user=request.user, date=date.today()
-            ).exclude(Q(status=TaskInstance.FORWARDED) | Q(is_deleted=True))
+                # Conflict detection
+                if start_time and not request.POST.get("force_save"):
+                    conflict_task = is_conflicting(future_tasks, start_time, end_time)
 
-            # 🔐 Time conflict check
-            if start_time:
-                # if (
-                #     start_time < datetime.now().time().replace(microsecond=0)
-                #     and task_type != "future"
-                # ):
-                #     messages.error(
-                #         request,
-                #         "You cannot create a task for a time that has already passed.",
-                #     )
-                #     return redirect("add_task")
-                conflictTask = is_conflicting(today_tasks, start_time, end_time)
-                if conflictTask != None:
-                    print(conflictTask.task.title)
-                    messages.error(
-                        request,
-                        f"Your time is conflicting with Task : {conflictTask.task.title}",
-                    )
-                    return redirect("add_task")
+                    # ⭐ If conflict exists → show popup
+                    if conflict_task:
+                        return render(
+                            request,
+                            "task.html",
+                            {
+                                "task": form,
+                                "conflict_task": conflict_task,
+                                "show_conflict_popup": True,
+                            },
+                        )
 
-            # 📅 Future task validation
-            if task_type == "future" and start_date <= date.today():
-                messages.error(request, "Date must be greater than today")
-                return redirect("add_task")
+            # Save task if no conflict OR user continues
+            if not conflict_task or request.POST.get("force_save"):
 
-            task_obj = form.save(commit=False)
-            task_obj.user = request.user
-            task_obj.save()
+                task_obj = form.save(commit=False)
+                task_obj.user = request.user
+                task_obj.save()
 
-            create_task_instance(task_obj)
+                create_task_instance(task_obj)
 
-            return redirect("dashboard")
-
-        messages.error(request, "Something went wrong! | Task not added")
-
-    else:
-        form = TaskForm()
+                return redirect("dashboard")
+        messages.error(request, "Something went wrong!")
 
     return render(request, "task.html", {"task": form})
 
@@ -175,8 +183,6 @@ def create_task_instance(task):
     if task.start_date is None or task.start_date == date.today():
         TaskInstance.objects.create(
             task=task,
-            startTime=task.startTime,
-            endTime=task.endTime,
             user=task.user,
             date=date.today(),
             status=TaskInstance.PENDING,
@@ -285,8 +291,6 @@ def loader(request):
 
     for task in pending_tasks:
         TaskInstance.objects.get_or_create(
-            startTime=task.task.startTime,
-            endTime=task.task.endTime,
             task=task.task,
             user=request.user,
             date=today,
@@ -304,8 +308,6 @@ def loader(request):
 
     for Ftask in tasks:
         TaskInstance.objects.get_or_create(
-            startTime=Ftask.startTime,
-            endTime=Ftask.endTime,
             task=Ftask,
             user=request.user,
             date=date.today(),
@@ -319,8 +321,6 @@ def loader(request):
 
     for rTask in regular_task:
         TaskInstance.objects.get_or_create(
-            startTime=rTask.startTime,
-            endTime=rTask.endTime,
             task=rTask,
             user=request.user,
             date=today,
@@ -502,6 +502,104 @@ def validate_mail_otp_view(request):
     otp_record.save(update_fields=["is_verified"])
 
     return JsonResponse({"success": True, "message": "Email verified successfully"})
+
+
+@login_required(login_url="user_login")
+def create_goal(request):
+    if request.method == "POST":
+        form = GoalForm(request.POST)
+
+        if form.is_valid():
+            Gtitle = form.cleaned_data.get("goal_title")
+            print(Gtitle)
+            Gpriority = form.cleaned_data.get("priority")
+            Gdeadline = form.cleaned_data.get("deadline")
+            already_exists = Goals.objects.filter(
+                user=request.user,
+                goal_title__iexact=Gtitle,
+                isDone=False,
+                isDelete=False,
+            ).exists()
+            if already_exists:
+                messages.error(
+                    request, f"{Gtitle} : You already have this goal active."
+                )
+            else:
+                goal_obj = form.save(commit=False)
+                goal_obj.user = request.user
+                goal_obj.save()
+                return redirect("dashboard")
+        else:
+            messages.error(request, "Something went wrong! | Goal not added")
+    else:
+        form = GoalForm()
+
+    return render(request, "goal.html", {"form": form})
+
+
+@login_required(login_url="user_login")
+def update_goal(request, pk):
+    source = request.GET.get("update")
+
+    try:
+        getGoal = get_object_or_404(Goals, id=pk, user=request.user)
+    except Goals.DoesNotExist:
+        messages.error(request, "Goal not found")
+        return redirect("dashboard")
+    if request.method == "POST":
+        form = GoalForm(request.POST, instance=getGoal)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+        else:
+            messages.error(request, "Somthing is wrong! | Goal not Update ")
+            return redirect("dashboard")
+
+    else:
+        form = GoalForm(instance=getGoal)
+    return render(request, "goal.html", {"form": form, "source": source})
+
+
+@login_required(login_url="user_login")
+def all_goals(request):
+    allGoals = Goals.objects.filter(user=request.user)
+    return render(request, "goal_dash.html", {"goals": allGoals})
+
+
+@login_required(login_url="user_login")
+def toggle_goal_status(request, pk):
+    try:
+        getGoal = get_object_or_404(Goals, id=pk, user=request.user)
+    except Goals.DoesNotExist:
+        messages.error(request, "Goal not found")
+        return redirect("dashboard")
+    if getGoal.isDone:
+        getGoal.isDone = False
+    else:
+        getGoal.isDone = True
+    getGoal.save()
+    return redirect("all_goals")
+
+
+@login_required(login_url="user_login")
+def delete_goal(request, pk):
+    try:
+        getGoal = get_object_or_404(Goals, id=pk, user=request.user)
+    except Goals.DoesNotExist:
+        messages.error(request, "Goal not found")
+        return redirect("dashboard")
+    if getGoal.isDelete:
+        getGoal.isDelete = False
+    else:
+        getGoal.isDelete = True
+    getGoal.save()
+    return redirect("all_goals")
+
+
+@login_required(login_url="user_login")
+def goal_details(request, pk):
+    goal = get_object_or_404(Goals, id=pk, user=request.user)
+    return render(request, "goal_details.html", {"goal": goal})
 
 
 # this is also can changed password but django have build in method and url to change password using old password we use them

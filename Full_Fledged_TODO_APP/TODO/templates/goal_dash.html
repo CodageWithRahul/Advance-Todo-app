@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/goal_dash.css' %}" />
+{% endblock css %}
+{% block content %}
+    <div class="goals-page">
+        <div class="goals-header">
+            <h2>🎯 All Goals</h2>
+            <a href="{% url 'create_goal' %}" class="btn-primary">+ Add Goal</a>
+        </div>
+        <div class="goals-table-wrapper">
+            <table class="goals-table">
+                <colgroup>
+                    <col style="width: 50px;">
+                    <col style="width: 200px;">
+                    <col style="width: 150px;">
+                    <col style="width: 190px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Goal</th>
+                        <th>Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for goal in goals %}
+                        <tr class="
+                                   {% if goal.isDone %}goal-archived{% endif %}
+                                   {% if goal.isDelete %}goal-unarchivable{% endif %}">
+                            <td class="number-cell">{{ forloop.counter }}</td>
+                            <td class="goal-title-cell">
+                                <a href="{% url 'goal_details' goal.id %}">{{ goal.goal_title|capfirst }}</a>
+                            </td>
+                            <td class="deadline-cell">
+                                {% if goal.deadline %}
+                                    {{ goal.deadline|date:"d M Y" }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td class="action-cell">
+                                {% if not goal.isDelete %}
+                                    <form method="post" action="{% url 'toggle_goal_status' goal.id %}">
+                                        {% csrf_token %}
+                                        {% if goal.isDone %}
+                                            <button type="submit" class="action-btn restore">Restore</button>
+                                        {% else %}
+                                            <button type="submit" class="action-btn archive">I Archived</button>
+                                        {% endif %}
+                                    </form>
+                                    {% if not goal.isDone %}
+                                        <form method="post" action="{% url 'delete_goal' goal.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="action-btn delete">Unarchivable</button>
+                                        </form>
+                                    {% endif %}
+                                {% else %}
+                                    <form method="post" action="{% url 'delete_goal' goal.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn undo">Undo</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-row">No goals added yet 🚀</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="back-link">
+        <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+    </div>
+    {% comment %} <div class="goals-page">
+        <div class="goals-header">
+            <h2>🎯 All Goals</h2>
+            <a href="{% url 'create_goal' %}" class="btn-primary">➕ Add Goal</a>
+        </div>
+        <div class="goals-table-wrapper">
+            <table class="goals-table">
+                <colgroup>
+                    <col style="width: 40px;">
+                    <col style="width: auto;">
+                    <col style="width: 140px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Goal</th>
+                        <th>Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for goal in goals %}
+                        <tr class=" {% if goal.isDone %}goal-archived{% endif %} {% if goal.isDelete %}goal-unarchivable{% endif %}">
+                            <td>{{ forloop.counter }}</td>
+                            <td class="goal-title-cell">
+                                {% if goal.isDone %}
+                                    <strike>{{ goal.goal_title|capfirst }}</strike>
+                                {% else %}
+                                    {{ goal.goal_title|capfirst }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if goal.deadline %}
+                                    {{ goal.deadline|date:"d M Y" }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td class="action-cell">
+                                {% if not goal.isDelete %}
+                                    {% if goal.isDone %}
+                                        <form method="post" action="{% url 'toggle_goal_status' goal.id %}" style="display:inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="action-btn restore">Mark Active</button>
+                                        </form>
+                                    {% else %}
+                                        <form method="post" action="{% url 'toggle_goal_status' goal.id %}" style="display:inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="action-btn archive">I Archived</button>
+                                        </form>
+                                    {% endif %}
+                                    <form method="post" action="{% url 'delete_goal' goal.id %}" style="display:inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn delete">Unarchivable</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" action="{% url 'delete_goal' goal.id %}" style="display:inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="action-btn disabled-text">Undo</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-row">No goals added yet</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="page-footer">
+        <a href="{% url 'dashboard' %}" class="back-link">← Back to Dashboard</a>
+    </div> {% endcomment %}
+{% endblock content %}

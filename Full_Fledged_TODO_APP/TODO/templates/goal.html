@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/goal.css' %}" />
+{% endblock css %}
+{% block content %}
+    <div class="goal-page">
+        <div class="goal-card">
+            <div class="goal-header">
+                <h2>🎯 Create New Goal</h2>
+                <p class="goal-subtitle">Set your focus and priority</p>
+            </div>
+            <form method="post" class="goal-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_goal_title">Goal</label>
+                    {{ form.goal_title }}
+                </div>
+                <div class="form-group">
+                    <label for="id_priority">Priority</label>
+                    {{ form.priority }}
+                </div>
+                <div class="form-group">
+                    <label for="id_deadline">Deadline</label>
+                    {{ form.deadline }}
+                </div>
+                <div class="form-actions">
+                    <a href="javascript:history.back()" class="btn-secondary">Cancel</a>
+                    {% if source  == "True" %}
+                        <!-- Update Mode -->
+                        <button type="submit" class="btn-submit">Update Goal</button>
+                    {% else %}
+                        <!-- Create Mode -->
+                        <button type="submit" class="btn-submit">Create Goal</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

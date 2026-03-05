@@ -1,0 +1,226 @@
+/* ============================= */
+/* PAGE WRAPPER */
+/* ============================= */
+
+.goals-page {
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+}
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+.goals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.goals-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.btn-primary {
+    background: #111827;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #374151;
+}
+
+/* ============================= */
+/* TABLE */
+/* ============================= */
+
+.goals-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.goals-table thead {
+    background: #f9fafb;
+}
+
+.goals-table th {
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.goals-table td {
+    padding: 18px 12px;
+    font-size: 14px;
+    color: #1f2937;
+    border-top: 1px solid #f3f4f6;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.goal-title-cell a{
+text-decoration: none;
+color: black;
+}
+.goal-title-cell a:hover{
+color: blue;
+}
+
+/* ============================= */
+/* CELLS */
+/* ============================= */
+
+.number-cell {
+    text-align: center;
+    color: #9ca3af;
+    font-weight: 600;
+}
+
+.goal-title-cell {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    font-weight: 500;
+}
+
+.deadline-cell {
+    color: #6b7280;
+}
+
+.text-right {
+    text-align: center;
+}
+
+/* ============================= */
+/* ROW HOVER */
+/* ============================= */
+
+.goals-table tbody tr {
+    transition: 0.25s ease;
+}
+
+.goals-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* ============================= */
+/* ARCHIVED */
+/* ============================= */
+
+.goal-archived {
+    background: #f0fdf4;
+}
+
+.goal-archived .goal-title-cell {
+    text-decoration: line-through;
+    color: #6b7280;
+}
+
+/* ============================= */
+/* UNARCHIVABLE */
+/* ============================= */
+
+.goal-unarchivable {
+    opacity: 0.55;
+}
+
+/* ============================= */
+/* ACTION BUTTONS */
+/* ============================= */
+
+.action-cell {
+    text-align: center;
+}
+
+.action-cell form {
+    display: inline;
+}
+
+.action-btn {
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-left: 6px;
+    transition: 0.2s ease;
+}
+
+/* Archive */
+.action-btn.archive {
+    color: #16a34a;
+}
+
+.action-btn.archive:hover {
+    background: #dcfce7;
+}
+
+/* Restore */
+.action-btn.restore {
+    color: #2563eb;
+}
+
+.action-btn.restore:hover {
+    background: #dbeafe;
+}
+
+/* Delete / Unarchivable */
+.action-btn.delete {
+    color: #9ca3af;
+}
+
+.action-btn.delete:hover {
+    background: #f3f4f6;
+}
+
+/* Undo */
+.action-btn.undo {
+    color: #dc2626;
+}
+
+.action-btn.undo:hover {
+    background: #fee2e2;
+}
+
+/* ============================= */
+/* EMPTY */
+/* ============================= */
+
+.empty-row {
+    text-align: center;
+    padding: 50px;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.back-link {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.back-link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}

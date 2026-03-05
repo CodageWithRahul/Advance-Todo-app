@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/goal_details.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="goal-detail-wrapper">
+        <div class="goal-card">
+            <div class="goal-header">
+                <h2>{{ goal.goal_title|capfirst }}</h2>
+                {% if goal.isDone %}
+                    <span class="badge done">Completed</span>
+                {% else %}
+                    <span class="badge pending">Pending</span>
+                {% endif %}
+            </div>
+            <div class="goal-body">
+                <div class="info-row">
+                    <span class="label">Priority</span>
+                    <span class="value">{{ goal.priority }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Deadline</span>
+                    <span class="value">{{ goal.deadline|date:"d M Y" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Created At</span>
+                    <span class="value">{{ goal.created_at|date:"d M Y , h:i A" }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Status</span>
+                    <span class="value">
+                        {% if goal.isDone %}
+                            Done
+                        {% else %}
+                            Not Completed
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="goal-actions">
+                <a href="javascript:history.back()" class="btn secondary">← Back</a>
+                {% if not goal.isDone and not goal.isDelete %}
+                    <a href="{% url 'update_goal' goal.id %}?update=True"
+                       class="btn primary">Edit Goal</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

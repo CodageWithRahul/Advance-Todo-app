@@ -38,7 +38,7 @@
                   {% if task.status == 'DONE' %}
                     <strike><a href="{% url 'task_details' task.id %}">{{ task.task.title|capfirst }}</a></strike>
                   {% else %}
-                    <a href="{% url 'task_details' task.id %}">{{ task.task.title|capfirst }}</a>
+                    <a href="{% url 'task_details' task.id %}?from=dashboard">{{ task.task.title|capfirst }}</a>
                   {% endif %}
                   <!-- Task type (sub text) -->
                   {% comment %} <div class="task-type">
@@ -50,9 +50,9 @@
                   </div> {% endcomment %}
                 </td>
                 <td class="task-time">
-                  <span class="time">{{ task.startTime|time:'h:i' }}</span>
+                  <span class="time">{{ task.task.startTime|time:'h:i' }}</span>
                   <span class="time-separator">–</span>
-                  <span class="time">{{ task.endTime|time:'h:i' }}</span>
+                  <span class="time">{{ task.task.endTime|time:'h:i' }}</span>
                 </td>
                 <td>
                   <span class="status {{ task.status|lower }}">{{ task.status }}</span>
@@ -84,41 +84,67 @@
         </table>
       </div>
     </div>
-    <!-- SIDE PANEL : UPCOMING TASKS -->
+    <!-- SIDE PANEL -->
     <aside class="dashboard-side">
-      <div class="side-header">
-        <h3>📅 Upcoming Tasks</h3>
-        <span class="side-subtitle">Next 7 days</span>
+      <!-- GOALS SECTION (Separate Card) -->
+      <div class="side-card goals-card bgred">
+        <div class="side-header">
+          <h3>🎯 Priority Goals</h3>
+          <a href="{% url 'create_goal' %}" class="btn btn-primary btn-sm">➕ New Goal</a>
+        </div>
+        {% if priority_goals %}
+          <div class="goals-wrapper">
+            {% for goal in priority_goals %}
+              <a href="{% url 'goal_details' goal.id %}" class="goal-card">{{ goal.goal_title|capfirst }}</a>
+            {% endfor %}
+          </div>
+          <div class="side-footer">
+            <a href="{% url 'all_goals' %}" class="more-link">View all goals →</a>
+          </div>
+        {% else %}
+          <p class="side-empty">No goals added yet</p>
+        {% endif %}
       </div>
-      {% if upcomingTask %}
-        <ul class="upcoming-list">
-          {% for task in upcomingTask %}
-            <li class="upcoming-item">
-              <a href="{% url 'update_task' task.id %}">{{ task.title|capfirst }}</a>
-              <span class="upcoming-date">{{ task.start_date|date:'d M' }}</span>
-            </li>
-          {% endfor %}
-        </ul>
-        <div class="side-footer">
-          <a href="{% url 'upcoming_task' %}" class="more-link">View all upcoming →</a>
+      <!-- UPCOMING TASKS -->
+      <div class="side-card upcoming-card">
+        <div class="side-header">
+          <h3>📅 Upcoming Tasks</h3>
+          <span class="side-subtitle">Next 7 days</span>
         </div>
-      {% else %}
-        <p class="side-empty">No upcoming tasks</p>
-      {% endif %}
+        {% if upcomingTask %}
+          <ul class="upcoming-list">
+            {% for task in upcomingTask %}
+              <li>
+                <a href="{% url 'update_task' task.id %}" class="upcoming-item">
+                  <div class="upcoming-date-box">
+                    <span class="day">{{ task.start_date|date:'d' }}</span>
+                    <span class="month">{{ task.start_date|date:'M' }}</span>
+                  </div>
+                  <div class="upcoming-info">{{ task.title|capfirst }}</div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="side-footer">
+            <a href="{% url 'upcoming_task' %}" class="more-link">View all upcoming →</a>
+          </div>
+        {% else %}
+          <p class="side-empty">No upcoming tasks</p>
+        {% endif %}
+      </div>
     </aside>
-  </div>
-  <!-- DELETE CONFIRMATION MODAL -->
-  <div id="deleteModal" class="modal">
-    <div class="modal-content">
-      <h3 id="modal-title"></h3>
-      <form method="post" id="deleteForm">
-        {% csrf_token %}
-        <div class="modal-actions">
-          <button type="submit" class="btn danger">Yes, Delete</button>
-          <button type="button" class="btn" id="cancelBtn">Cancel</button>
-        </div>
-      </form>
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
+        <h3 id="modal-title"></h3>
+        <form method="post" id="deleteForm">
+          {% csrf_token %}
+          <div class="modal-actions">
+            <button type="submit" class="btn danger">Yes, Delete</button>
+            <button type="button" class="btn" id="cancelBtn">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-  <script src="{% static 'js/delete-modal.js' %}"></script>
-{% endblock content %}
+    <script src="{% static 'js/delete-modal.js' %}"></script>
+  {% endblock content %}

@@ -48,7 +48,7 @@ def is_conflicting(db_tasks, user_start, user_end):
             continue
 
         # Universal overlap check
-        if db_start <= user_end and user_start <= db_end:
+        if db_start < user_end and user_start < db_end:
             conflictTask = task
             return conflictTask
 

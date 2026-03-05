@@ -19,6 +19,8 @@ const passwordSection = document.getElementById("passwordSection");
 const otpStatus = document.getElementById("otpStatus");
 const verifyStatus = document.getElementById("verifyStatus");
 const signupBtn = document.getElementById("signupBtn");
+const resendBtn = document.getElementById("resendOtpBtn");
+
 
 sendOtpBtn.addEventListener("click", () => {
     const email = document.getElementById("id_email").value.trim();
@@ -79,6 +81,7 @@ verifyOtpBtn.addEventListener("click", () => {
             passwordSection.style.display = "block";
             signupBtn.style.display = "block";
             verifyOtpBtn.disabled = true;
+            resendBtn.disabled= true;
         } else {
             verifyStatus.textContent = data.message || data.error;
         }
@@ -88,3 +91,25 @@ verifyOtpBtn.addEventListener("click", () => {
 function getCSRFToken() {
     return document.querySelector("[name=csrfmiddlewaretoken]").value;
 }
+
+
+resendBtn.addEventListener("click", function () {
+
+    const email = document.getElementById("id_email").value.trim();
+
+    const formData = new FormData();
+    formData.append("email", email);
+
+    fetch("/singup/send_otp_mail/", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        verifyStatus.textContent = "OTP sent again!";
+    });
+
+});
