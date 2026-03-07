@@ -21,6 +21,18 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOCAL_DB = os.environ.get("LOCAL_DB")
+if LOCAL_DB:
+    DB_PATH = LOCAL_DB
+else:
+    DB_PATH = BASE_DIR / "db.sqlite3"
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": DB_PATH,
+    }
+}
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -81,13 +93,13 @@ WSGI_APPLICATION = "Full_Fledged_TODO_APP.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-    "default": dj_database_url.config(default="sqlite:///db.sqlite3")
-}
+# DATABASES = {
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.sqlite3',
+#     #     'NAME': BASE_DIR / 'db.sqlite3',
+#     # }
+#     "default": dj_database_url.config(default="sqlite:///db.sqlite3")
+# }
 
 
 # Password validation
