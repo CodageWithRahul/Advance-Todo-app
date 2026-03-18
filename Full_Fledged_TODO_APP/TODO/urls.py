@@ -30,6 +30,10 @@ urlpatterns = [
     ),
     path("goal/delete_goal/<int:pk>", views.delete_goal, name="delete_goal"),
     path("goal/goal_details/<int:pk>", views.goal_details, name="goal_details"),
+    path("goal/coins_page/", views.coins_page, name="coins_page"),
+    path("note/create_note/", views.create_note, name="create_note"),
+    path("note/toggle/<int:pk>/", views.toggle_note_status, name="toggle_note_status"),
+    path("note/all_notes/", views.allNotes, name="all_notes"),
     # path('user/profile/password_change',views.password_change_view,name='password_change_view'),
     path(
         "password-reset/",

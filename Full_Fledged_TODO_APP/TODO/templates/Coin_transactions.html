@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/coin_transactions.css' %}" />
+{% endblock css %}
+{% block content %}
+    <div class="coins-page">
+        <div class="coins-hero">
+            <div class="hero-text">
+                <a href="{% url 'dashboard' %}" class="back-btn">← Back to Dashboard</a>
+                <p class="hero-label">Reward balance</p>
+                <h1 class="hero-balance">{{ user.coinwallet.balance }}</h1>
+                <p class="hero-subtitle">Keep completing tasks to grow your vault of coins.</p>
+                <div class="hero-meta">
+                    <div class="hero-meta-card">
+                        <span class="meta-label">Tasks done</span>
+                        <strong>{{ tasks_done }}</strong>
+                    </div>
+                    <div class="hero-meta-card">
+                        <span class="meta-label">Transactions logged</span>
+                        <strong>{{ transactions|length }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-card">
+                {% if latest_transaction %}
+                    <p class="hero-card-title">Latest activity</p>
+                    <p class="hero-card-task">{{ latest_transaction.taskInstance.task }}</p>
+                    <p class="hero-card-date">{{ latest_transaction.created_at|date:"M j, Y \\a\\t H:i" }}</p>
+                {% else %}
+                    <p class="hero-card-title">No transactions yet</p>
+                    <p class="hero-card-date">Your streak starts the moment you log a task.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <section class="transaction-panel">
+            <header class="panel-header">
+                <div>
+                    <h2>Transaction timeline</h2>
+                    <p>Every gain and deduction is logged right here.</p>
+                </div>
+                <span class="panel-count">{{ transactions|length }} entries</span>
+            </header>
+
+            <div class="transaction-list">
+                {% for t in transactions %}
+                    <article class="transaction-card {% if t.coins > 0 %}positive{% else %}negative{% endif %}">
+                        <div class="transaction-info">
+                            <p class="transaction-task">{{ t.taskInstance.task }}</p>
+                            <p class="transaction-source">{{ t.get_source_display }}</p>
+                            <p class="transaction-time">{{ t.created_at|date:"M j, Y \\a\\t H:i" }}</p>
+                        </div>
+                        <span class="transaction-amount {% if t.coins > 0 %}plus{% else %}minus{% endif %}">
+                            {% if t.coins > 0 %}+{% endif %}{{ t.coins }}
+                        </span>
+                    </article>
+                {% empty %}
+                    <p class="empty-state">There are no coin movements yet. Complete a task to see entries.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock content %}

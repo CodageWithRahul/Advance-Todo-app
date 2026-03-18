@@ -21,7 +21,7 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-LOCAL_DB = os.environ.get("LOCAL_DB")
+LOCAL_DB = os.environ.get("LOCAL_D")
 if LOCAL_DB:
     DB_PATH = LOCAL_DB
 else:

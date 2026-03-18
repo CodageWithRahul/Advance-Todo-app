@@ -1,6 +1,15 @@
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, loginForm, TaskForm, GoalForm
-from .models import Task, TaskInstance, UserDailyState, EmailOtp, Goals
+from .forms import SignUpForm, loginForm, TaskForm, GoalForm, NoteForm
+from .models import (
+    Task,
+    TaskInstance,
+    UserDailyState,
+    EmailOtp,
+    Goals,
+    CoinWallet,
+    CoinTransaction,
+    Notes,
+)
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -10,7 +19,13 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import update_session_auth_hash
-from .todoUtils import upcoming_tasks, email_otp_gen, email_otp_deleter, is_conflicting
+from .todoUtils import (
+    upcoming_tasks,
+    email_otp_gen,
+    email_otp_deleter,
+    is_conflicting,
+    checkTaskTime,
+)
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -22,9 +37,13 @@ import smtplib
 from django.db import transaction
 import logging, socket, threading, requests
 from django.db.models import Case, When, IntegerField, Value
+import json
 
 
 logger = logging.getLogger(__name__)
+
+TASK_C_POINT = 5
+GOAL_C_POINT = 10
 
 
 def UserSignUp(request):
@@ -89,6 +108,7 @@ def Userlogin(request):
 
 @login_required(login_url="user_login")
 def UserDashboard(request):
+
     loader(request)
     tasks = (
         TaskInstance.objects.filter(user=request.user, date=date.today())
@@ -108,6 +128,9 @@ def UserDashboard(request):
     for task in tasks:
         task.is_created_today = task.task.created_at.date() == date.today()
     goals = Goals.objects.filter(user=request.user, isDone=False, isDelete=False)
+    notes = Notes.objects.filter(user=request.user, is_done=False).order_by(
+        "-created_at"
+    )
     return render(
         request,
         "dashboard.html",
@@ -116,6 +139,8 @@ def UserDashboard(request):
             "todayDate": date.today(),
             "upcomingTask": upcomingTask,
             "priority_goals": goals,
+            "coins": request.user.coinwallet.balance,
+            "notes": notes,
         },
     )
 
@@ -241,15 +266,37 @@ def delete_task(request, pk):
 @login_required(login_url="user_login")
 def mark_done(request, pk):
     task = get_object_or_404(TaskInstance, id=pk, user=request.user)
+
+    wallet = request.user.coinwallet
+
     if task.status == "DONE":
         task.status = "PENDING"
         task.task.is_active = True
-        # messages.error(request,"Mark as Pending")
+        wallet.apply_transaction(
+            -TASK_C_POINT,
+            "undo",
+            task,
+        )
+
     else:
+        print(timezone.now())
+        print(timezone.localtime())
         task.status = "DONE"
         task.task.is_active = False
-        # messages.success(request,"Mark As Done")
+        if checkTaskTime(task):
+            wallet.apply_transaction(
+                TASK_C_POINT,
+                "task",
+                task,
+            )
+        else:
+            wallet.apply_transaction(
+                0,
+                "notInTime",
+                task,
+            )
 
+    wallet.save()
     task.task.save()
     task.save()
 
@@ -511,7 +558,6 @@ def create_goal(request):
 
         if form.is_valid():
             Gtitle = form.cleaned_data.get("goal_title")
-            print(Gtitle)
             Gpriority = form.cleaned_data.get("priority")
             Gdeadline = form.cleaned_data.get("deadline")
             already_exists = Goals.objects.filter(
@@ -568,6 +614,7 @@ def all_goals(request):
 
 @login_required(login_url="user_login")
 def toggle_goal_status(request, pk):
+    wallet = request.user.coinwallet
     try:
         getGoal = get_object_or_404(Goals, id=pk, user=request.user)
     except Goals.DoesNotExist:
@@ -575,8 +622,13 @@ def toggle_goal_status(request, pk):
         return redirect("dashboard")
     if getGoal.isDone:
         getGoal.isDone = False
+        wallet.apply_transaction(-GOAL_C_POINT, "goal", None, getGoal)
+        wallet.save()
+
     else:
         getGoal.isDone = True
+        wallet.apply_transaction(GOAL_C_POINT, "goal", None, getGoal)
+        wallet.save()
     getGoal.save()
     return redirect("all_goals")
 
@@ -600,6 +652,68 @@ def delete_goal(request, pk):
 def goal_details(request, pk):
     goal = get_object_or_404(Goals, id=pk, user=request.user)
     return render(request, "goal_details.html", {"goal": goal})
+
+
+def coins_page(request):
+    trans = (
+        CoinTransaction.objects.filter(user=request.user)
+        .select_related("taskInstance")
+        .order_by("-created_at")
+    )
+    tasks_done = TaskInstance.objects.filter(user=request.user, status="DONE").count()
+    latest_transaction = trans.first()
+    return render(
+        request,
+        "Coin_transactions.html",
+        {
+            "transactions": trans,
+            "tasks_done": tasks_done,
+            "latest_transaction": latest_transaction,
+        },
+    )
+
+
+def create_note(request):
+    if request.method == "POST":
+        NForm = NoteForm(request.POST)
+        if NForm.is_valid():
+            note_obj = NForm.save(commit=False)
+            note_obj.user = request.user
+            note_obj.save()
+            return redirect("dashboard")
+        messages.error(request, "Something went wrong! | Note not added")
+    else:
+        NForm = NoteForm()
+
+    return render(request, "addNote.html", {"NForm": NForm})
+
+
+@login_required(login_url="user_login")
+@require_POST
+def toggle_note_status(request, pk):
+    note = get_object_or_404(Notes, id=pk, user=request.user)
+    try:
+        payload = json.loads(request.body.decode("utf-8") or "{}")
+    except json.JSONDecodeError:
+        payload = {}
+
+    is_done = payload.get("is_done")
+    if isinstance(is_done, str):
+        is_done = is_done.lower() in ("1", "true", "yes")
+    elif isinstance(is_done, (int, float)):
+        is_done = bool(is_done)
+    elif not isinstance(is_done, bool):
+        is_done = not note.is_done
+
+    note.is_done = is_done
+    note.save(update_fields=["is_done"])
+    return JsonResponse({"success": True, "is_done": note.is_done})
+
+
+@login_required(login_url="user_login")
+def allNotes(request):
+    notes = Notes.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "notes.html", {"notes": notes})
 
 
 # this is also can changed password but django have build in method and url to change password using old password we use them

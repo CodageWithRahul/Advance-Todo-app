@@ -7,6 +7,7 @@
     margin: 0 auto;
     padding: 10px 20px;
 }
+
 /* MAIN + SIDE LAYOUT */
 .dashboard-layout {
     display: grid;
@@ -17,35 +18,34 @@
 
 /* MAIN CONTENT */
 .dashboard-main {
-    flex: 3;
-    min-width: 0; /* for long content */
-    height: calc(100vh - 120px); /* adjust based on header/navbar */
+    min-width: 0;
+    height: calc(100vh - 120px);
     overflow-y: hidden;
-    padding-right: 6px; /* avoids scrollbar overlap */
+    padding-right: 6px;
 }
 
-/* ============================= */
-/* SIDE PANEL */
-/* ============================= */
+/* =============================
+   SIDE PANEL
+============================= */
 
 .dashboard-side {
-    flex: 1.1;
     background: #ffffff;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid #eef2f7;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.05);
     position: sticky;
     top: 90px;
 
     height: calc(100vh - 120px);
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
 }
 
-/* ============================= */
-/* SIDE CARD */
-/* ============================= */
+/* =============================
+   SIDE CARD
+============================= */
 
 .side-card {
     background: #ffffff;
@@ -54,75 +54,35 @@
     border: 1px solid #eef2f7;
     box-shadow: 0 4px 14px rgba(0,0,0,0.05);
     transition: all 0.2s ease;
+    height: calc(100vh - 120px);
+    overflow: hidden;
 }
 
 .side-card:hover {
     box-shadow: 0 10px 24px rgba(0,0,0,0.08);
 }
 
-/* ============================= */
-/* SCROLLABLE CONTENT AREAS */
-/* ============================= */
-
-.upcoming-list,
-.goals-wrapper {
-    overflow-y: auto;
-    flex: 1;
-    min-height: 0;
-}
-
-/* ============================= */
-/* SIDE CARD (SECTION WRAPPER) */
-/* ============================= */
-
-.side-card {
-    margin-top: 24px;
-}
-
-/* First section shouldn't have margin */
-.side-card:first-child {
-    margin-top: 0;
-}
-
-/* ============================= */
-/* GOALS CARD */
-/* ============================= */
-
-.goal-card {
-    display: block;
-    padding: 8px 10px;
-    border-radius: 8px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    color: #1f2937;
-    transition: background 0.2s ease, transform 0.15s ease;
-}
-
-/* Small hover */
-.goal-card:hover {
-    background: #f9fafb;
-    transform: translateX(3px);
-}
-
-/* ============================= */
-/* HEADER */
-/* ============================= */
+/* =============================
+   HEADER
+============================= */
 
 .side-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .side-header h3 {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     margin: 0;
-    color: #065f46;
+    color: #111827;
+}
+
+.side-subtitle {
+    font-size: 11px;
+    color: #6b7280;
 }
 
 /* Small Button */
@@ -132,54 +92,31 @@
     border-radius: 6px;
 }
 
-/* ============================= */
-/* GOALS WRAPPER */
-/* ============================= */
+/* =============================
+   GOALS
+============================= */
 
-.goals-wrapper {
+.goals-card {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border: 1px solid #d1fae5;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    max-height: 380px;
+    overflow: hidden;
 }
-
-/* ============================= */
-/* GOALS CARD (COMPACT) */
-/* ============================= */
-
-.goals-card {
-    padding: 14px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
-    border: 1px solid #d1fae5;
-}
-
-/* Header smaller spacing */
-.goals-card .side-header {
-    margin-bottom: 10px;
-}
-
-.goals-card h3 {
-    font-size: 14px;
-}
-
-/* ============================= */
-/* GOALS WRAPPER */
-/* ============================= */
 
 .goals-wrapper {
     display: flex;
     flex-direction: column;
     gap: 8px;
-
-    /* show approx 5 items */
-    max-height: 240px;
     overflow-y: auto;
-    padding-right: 4px; /* space for scrollbar */
+    padding-right: 4px;
+    flex: 1 1 auto;
 }
 
-/* Scrollbar styling (optional but clean) */
 .goals-wrapper::-webkit-scrollbar {
-    width: 5px;
+    width: 5px; 
 }
 
 .goals-wrapper::-webkit-scrollbar-thumb {
@@ -187,107 +124,152 @@
     border-radius: 10px;
 }
 
-/* ============================= */
-/* GOAL CARD SMALLER */
-/* ============================= */
-
 .goal-card {
     padding: 8px 10px;
     border-radius: 8px;
     background: #ffffff;
     border: 1px solid #e5e7eb;
     text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1f2937;
     transition: all 0.2s ease;
 }
-
+.goals-card .side-footer{
+    flex-shrink:0;
+}
 .goal-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.06);
 }
 
-/* Goal title smaller */
-.goal-info h4 {
-    font-size: 13px;
-}
+/* =============================
+   NOTES
+============================= */
 
-/* Smaller tag */
-.goal-tag {
-    font-size: 9px;
-    padding: 2px 7px;
-}
-.notes-list{
-  list-style:none;
-  padding:0;
-  margin:10px 0;
-}
-
-.note-item{
-  padding:6px 0;
-  border-bottom:1px solid #eee;
-}
-
-.note-checkbox{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  cursor:pointer;
-}
-
-.note-checkbox input{
-  width:16px;
-  height:16px;
-  cursor:pointer;
-}
-
-.note-text{
-  font-size:14px;
-}
-
-.note-text.done{
-  text-decoration:line-through;
-  color:#999;
-}
 .notes-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    background: #fff59e;
+    border-radius: 10px;
+    padding: 22px 26px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 20px;
+}
+
+.notes-card .side-header {
+    border-bottom: 2px solid #111;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+}
+
+.notes-card .side-header h3 {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    color: #111;
+}
+
+.notes-card .side-header a {
+    border: 2px solid #111;
+    background: transparent;
+    color: #111;
+    padding: 4px 10px;
+}
+
+.notes-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
 }
 
 .notes-scroll {
-  max-height: 220px;
-  overflow-y: auto;
-  padding-right: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 6px;
 }
 
 .notes-scroll::-webkit-scrollbar {
-  width: 6px;
+    width: 6px;
 }
 
 .notes-scroll::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
 .notes-scroll::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.3);
-  border-radius: 8px;
+    background: rgba(17, 17, 17, 0.3);
+    border-radius: 8px;
 }
 
 .notes-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(15, 23, 42, 0.3) transparent;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(17, 17, 17, 0.3) transparent;
 }
-/* ============================= */
-/* FOOTER */
-/* ============================= */
+
+.note-item {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.35);
+    padding-bottom: 10px;
+    display: flex;
+}
+
+.note-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.note-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.note-checkbox input {
+    width: 18px;
+    height: 18px;
+    accent-color: #111;
+    border-radius: 3px;
+}
+
+.note-text {
+    font-size: 15px;
+    color: #111;
+    font-weight: 500;
+}
+
+.note-text.done {
+    color: rgba(17, 17, 17, 0.6);
+    text-decoration: line-through;
+    font-weight: 400;
+}
+
+.notes-card .side-footer {
+    margin-top: auto;
+    border-top: 2px solid rgba(0, 0, 0, 0.35);
+    padding-top: 10px;
+    text-align: right;
+}
+
+.notes-card .more-link {
+    color: #111;
+}
+
+/* =============================
+   FOOTER
+============================= */
 
 .side-footer {
-    margin-top: 14px;
+    margin-top: 12px;
 }
 
 .more-link {
     font-size: 12px;
     font-weight: 500;
-    color: #047857;
+    color: #4f46e5;
     text-decoration: none;
 }
 
@@ -303,19 +285,23 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .dashboard-header h2 {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 600;
-    color: #222;
+    color: #111827;
 }
 
 .header-actions {
     display: flex;
     gap: 10px;
 }
+
+/* =====================
+   BUTTONS
+===================== */
 
 .btn-primary {
     background: #4f46e5;
@@ -324,10 +310,13 @@
     border-radius: 6px;
     text-decoration: none;
     font-weight: 500;
+    box-shadow: 0 4px 10px rgba(79,70,229,0.25);
+    transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
     background: #4338ca;
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -350,38 +339,27 @@
     box-shadow: 0 8px 22px rgba(0,0,0,0.05);
     overflow-x: auto;
 }
-/* Table should not break */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    /* min-width: 600px; Prevents mobile column collapse */
-}
-
-/* Scroll tbody but keep structure stable */
-tbody {
-    display: block;
-    max-height: 450px;
-    overflow-y: auto;
-}
-tbody tr:hover {
-    background: #f8fafc;
-}
-/* Fix header alignment */
-thead tr,
-tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
 
 /* =====================
    TABLE
 ===================== */
 
-.task-table {
+table {
     width: 100%;
     border-collapse: collapse;
-    /* min-width: 700px; */
+}
+
+tbody {
+    display: block;
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+thead tr,
+tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
 .task-table thead {
@@ -396,9 +374,13 @@ tbody tr {
     text-align: center;
 }
 
-.task-actions{
-    text-align:center;
+tbody tr:hover {
+    background: #f8fafc;
 }
+
+/* =====================
+   TASK LINK
+===================== */
 
 .task-link-btn{
     display:inline-block;
@@ -423,7 +405,7 @@ tbody tr {
 }
 
 /* =====================
-   LONG TEXT FIX
+   TASK TITLE
 ===================== */
 
 .task-title {
@@ -515,11 +497,28 @@ tbody tr {
 }
 
 /* =====================
-   UPCOMING SIDE PANEL
+   UPCOMING TASKS
 ===================== */
-/* ============================= */
-/* UPCOMING SECTION */
-/* ============================= */
+
+.upcoming-card {
+    width: 100%;
+    margin: 30px auto 10px auto;
+    background: #ffffff;
+    border-radius: 18px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
+    padding: 22px;
+    max-height: 270px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.upcoming-card > * {
+    position: relative;
+    z-index: 1;
+}
 
 .upcoming-list {
     list-style: none;
@@ -527,105 +526,104 @@ tbody tr {
     margin: 0;
     overflow-y: auto;
     flex: 1;
-}
-
-/* Each item */
-.upcoming-item {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-    text-decoration: none;
-    border-bottom: 1px solid #f1f1f1;
-    transition: background 0.2s ease;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 6px;
 }
 
-.upcoming-item:last-child {
-    border-bottom: none;
+.upcoming-item {
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 14px;
+    text-decoration:none;
+    border-radius:14px;
+    background: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.upcoming-item:hover {
+.upcoming-item:hover{
     background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
 }
 
-/* Date box */
 .upcoming-date-box {
-    width: 40px;
-    min-width: 40px;
-    text-align: center;
-    background: #e0f2fe;
-    border-radius: 8px;
-    padding: 4px 0;
+    width:48px;
+    min-width:48px;
+    text-align:center;
+    background:#f4f5f7;
+    border-radius:12px;
+    padding:8px 0;
 }
 
 .upcoming-date-box .day {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    color: #0284c7;
+    display:block;
+    font-size:14px;
+    font-weight:700;
+    color:#4f46e5;
 }
 
 .upcoming-date-box .month {
-    display: block;
-    font-size: 10px;
-    text-transform: uppercase;
-    color: #0369a1;
+    display:block;
+    font-size:10px;
+    text-transform:uppercase;
+    color:#6366f1;
 }
 
-/* Task title */
 .upcoming-info {
-    font-size: 13px;
-    font-weight: 500;
-    color: #1f2937;
-}
-/* =====================
-   TASK TYPE (SUBTITLE)
-===================== */
-
-.task-type {
-    font-size: 12px;
-    color: #6b7280;  /* soft gray */
-    margin-top: 4px;
-    text-transform: capitalize;
+    font-size:14px;
+    font-weight:600;
+    color:#1f2937;
+    line-height:1.4;
 }
 
-/* =====================
-   TASK TIME (BEAUTIFIED)
-===================== */
-
-.task-time {
-    font-size: 13px;
-    color: #374151;
-    white-space: nowrap;
+.upcoming-placeholder {
+    margin: 0;
+    border-radius: 16px;
+    border: 1px dashed rgba(79, 70, 229, 0.4);
+    background: rgba(79, 70, 229, 0.06);
+    padding: 32px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 160px;
 }
 
-.task-time .time {
-    font-weight: 500;
+.placeholder-copy {
+    max-width: 220px;
 }
 
-.task-time .time-separator {
-    margin: 0 6px;
-    color: #9ca3af;
+.placeholder-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #312e81;
 }
 
+.placeholder-subtitle {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: #4b5563;
+}
 
 /* =====================
    RESPONSIVE
 ===================== */
 
 @media (max-width: 900px) {
-    .container {
-        max-width: 95%;
-    }
 
     .dashboard-layout {
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
 
     .dashboard-side {
         position: static;
         width: 100%;
-        height: calc(100vh - 120px);
     }
 
     .dashboard-header {
@@ -634,13 +632,11 @@ tbody tr {
         gap: 10px;
     }
 
-        /* Hide all columns */
     .task-table th,
     .task-table td {
         display: none;
     }
 
-    /* Show only task column */
     .task-table th:nth-child(2),
     .task-table td:nth-child(2),
     .task-table th:nth-child(5),
@@ -649,16 +645,14 @@ tbody tr {
         width: 100%;
     }
 
-    /* Make task title bigger for mobile */
     .task-title a {
         font-size: 16px;
         font-weight: 500;
         display: block;
         padding: 10px 0;
     }
-     .task-table tbody tr {
+
+    .task-table tbody tr {
         border-bottom: 1px solid #eee;
     }
 }
-
-

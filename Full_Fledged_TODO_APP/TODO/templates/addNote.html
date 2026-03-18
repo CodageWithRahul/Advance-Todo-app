@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    Add Note
+{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/addNote.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="note-page">
+        <div class="note-card">
+            <h1 class="note-title">Add a note</h1>
+            <p class="note-subtitle">Capture quick thoughts, reminders, or plans.</p>
+            <form method="post" class="note-form">
+                {% csrf_token %}
+                <div class="note-field">
+                    {{ NForm.note.label_tag }}
+                    {{ NForm.note }}
+                    {% if NForm.note.errors %}<p class="field-error">{{ NForm.note.errors.0 }}</p>{% endif %}
+                </div>
+                <div class="note-actions">
+                    <button type="submit" class="btn-primary">Save Note</button>
+                    <a href="{% url 'dashboard' %}" class="btn-secondary">Back to Dashboard</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -127,6 +127,27 @@ body {
     border: 1px solid #bae6fd;
 }
 
+.coins-box{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#fff3cd;
+    padding:6px 12px;
+    border-radius:20px;
+    font-weight:600;
+    text-decoration:none;
+    color:#333;
+    border:1px solid #f1d48a;
+}
+
+.coins-box i{
+    color:#f4b400;
+}
+
+.coins-box:hover{
+    background:#ffe8a1;
+}
+
 /* MOBILE */
 @media (max-width: 600px) {
     .container {

@@ -47,11 +47,16 @@ class loginForm(forms.Form):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = models.Task
-        fields = ["title", "task_type", "start_date", "startTime", "endTime"]
+        fields = ["title", "task_type", "start_date", "startTime", "endTime", "link"]
         widgets = {
             "start_date": forms.DateInput(attrs={"type": "date"}),
             "startTime": forms.TimeInput(attrs={"type": "time"}),
             "endTime": forms.TimeInput(attrs={"type": "time"}),
+            "link": forms.URLInput(
+                attrs={
+                    "placeholder": "https://meet.google.com/... or https://zoom.us/..."
+                }
+            ),
         }
 
     # def clean_start_date(self):
@@ -64,3 +69,10 @@ class GoalForm(forms.ModelForm):
         model = models.Goals
         fields = ["goal_title", "priority", "deadline"]
         widgets = {"deadline": forms.DateInput(attrs={"type": "date"})}
+
+
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = models.Notes
+        fields = ["note"]
+        widgets = {"note": forms.TextInput(attrs={"placeholder": "Enter a new Note"})}

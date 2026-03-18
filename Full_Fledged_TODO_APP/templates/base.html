@@ -25,6 +25,11 @@
                 </a>
                 {% if user.is_authenticated %}
                     <div class="nav-right">
+                        <!-- Coins -->
+                        <a href="{% url 'coins_page' %}" class="coins-box">
+                            <i class="fa-solid fa-coins"></i>
+                            <span>{{ user.coinwallet.balance }}</span>
+                        </a>
                         <span class="username">
                             Hi, <a href="{% url 'user_profile_view' %}">{{ user.first_name|default:user.username }} {{ user.last_name }}</a>
                         </span>

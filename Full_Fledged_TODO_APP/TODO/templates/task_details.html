@@ -49,6 +49,10 @@
                     <span class="label">Status</span>
                     <span class="value">{{ task.status }}</span>
                 </div>
+                <div class="info-row ">
+                    <span class="label">Link</span>
+                    {% if task.task.link %}<a href="{{ task.task.link }}" target="_blank" class="task-link">🔗 Open Link</a>{% endif %}
+                </div>
                 <div class="info-row">
                     <span class="label">Remarks</span>
                     <span class="value">

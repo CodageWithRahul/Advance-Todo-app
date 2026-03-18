@@ -27,6 +27,7 @@ class Task(models.Model):
     start_date = models.DateField(
         null=True, blank=True, help_text="Used only for future tasks"
     )
+    link = models.URLField(blank=True, null=True)
 
     startTime = models.TimeField(blank=True, null=True)
     endTime = models.TimeField(blank=True, null=True)
@@ -136,3 +137,56 @@ class Goals(models.Model):
     def save(self, *args, **kwargs):
         self.priority_order = self.PRIORITY_ORDER_MAP.get(self.priority, 5)
         super().save(*args, **kwargs)
+
+
+class CoinWallet(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    balance = models.PositiveIntegerField(default=0)
+
+    def apply_transaction(self, coins, source, taskInstance=None, goal=None):
+        if self.balance + coins < 0:
+            coins = -self.balance
+
+        CoinTransaction.objects.create(
+            user=self.user,
+            source=source,
+            taskInstance=taskInstance,
+            goal=goal,
+            coins=coins,
+        )
+
+        self.balance += coins
+        self.save()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.balance}"
+
+
+class CoinTransaction(models.Model):
+
+    REWARD_SOURCE = [
+        ("task", "Task Completion"),
+        ("goal", "Goal Completion"),
+        ("login", "Daily Login"),
+        ("streak", "Streak Bonus"),
+        ("undo", "Undo Task"),
+        ("notInTime", "Not done within the time"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    source = models.CharField(max_length=20, choices=REWARD_SOURCE)
+
+    taskInstance = models.ForeignKey(
+        TaskInstance, on_delete=models.CASCADE, null=True, blank=True
+    )
+    goal = models.ForeignKey(Goals, on_delete=models.CASCADE, null=True, blank=True)
+
+    coins = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Notes(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    note = models.TextField()
+    is_done = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

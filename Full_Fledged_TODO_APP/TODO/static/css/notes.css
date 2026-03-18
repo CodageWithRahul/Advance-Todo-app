@@ -1,0 +1,132 @@
+.notes-page {
+    min-height: calc(100vh - 120px);
+    padding: 60px 0 120px;
+}
+
+.notes-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.notes-header h1 {
+    font-size: 32px;
+    margin-bottom: 6px;
+    color: #0f172a;
+}
+
+.notes-header p {
+    color: #475569;
+    margin: 0;
+}
+
+.notes-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.notes-actions .btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.notes-actions .btn-secondary {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #0f172a;
+}
+
+.notes-actions .btn-secondary:hover {
+    background: #f3f4f6;
+}
+
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.note-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 180px;
+}
+
+.note-body {
+    color: #0f172a;
+    font-size: 16px;
+    line-height: 1.7;
+    flex: 1;
+    white-space: pre-wrap;
+}
+
+.note-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #475569;
+    gap: 12px;
+}
+
+.note-meta .status {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.note-meta .status.done {
+    background: rgba(16, 185, 129, 0.15);
+    color: #047857;
+}
+
+.note-card.note-complete {
+    border-color: #10b981;
+}
+
+.empty-state {
+    text-align: center;
+    font-size: 16px;
+    color: #475569;
+    padding: 20px;
+    border: 1px dashed #cbd5f5;
+    border-radius: 14px;
+    background: #f8fafc;
+}
+
+.empty-state a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .notes-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .note-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

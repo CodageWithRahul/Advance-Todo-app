@@ -1,0 +1,120 @@
+.note-page {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+}
+
+.note-card {
+    width: min(520px, 92vw);
+    background: #ffffff;
+    padding: 36px 32px;
+    border-radius: 22px;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.note-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.note-subtitle {
+    text-align: center;
+    color: #475569;
+    margin-bottom: 24px;
+    font-size: 15px;
+}
+
+.note-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.note-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.note-field label {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.note-field input {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    background: #f8fafc;
+    font-size: 16px;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-field input:focus {
+    outline: none;
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.field-error {
+    color: #dc2626;
+    font-size: 13px;
+}
+
+.note-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.note-actions .btn-primary {
+    flex: 1;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.note-actions .btn-primary:hover {
+    filter: brightness(1.08);
+}
+
+.note-actions .btn-secondary {
+    flex: 1;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    text-decoration: none;
+    color: #0f172a;
+    padding: 12px 16px;
+    background: #ffffff;
+    text-align: center;
+    font-weight: 600;
+}
+
+.note-actions .btn-secondary:hover {
+    background: #f3f4f6;
+}
+
+@media (max-width: 500px) {
+    .note-card {
+        padding: 28px 20px;
+    }
+
+    .note-actions {
+        flex-direction: column;
+    }
+}

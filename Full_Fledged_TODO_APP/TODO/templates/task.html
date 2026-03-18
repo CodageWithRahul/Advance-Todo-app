@@ -35,6 +35,10 @@
                     {{ task.start_date.label_tag }}
                     {{ task.start_date }}
                 </div>
+                <div class="form-group">
+                    {{ task.link.label_tag }}
+                    {{ task.link }}
+                </div>
             {% else %}
                 <div class="form-group">
                     {{ task.title.label_tag }}
@@ -55,6 +59,10 @@
                 <div class="form-group" id="date-field">
                     {{ task.start_date.label_tag }}
                     {{ task.start_date }}
+                </div>
+                <div class="form-group">
+                    {{ task.link.label_tag }}
+                    {{ task.link }}
                 </div>
             {% endif %}
             <div class="form-actions">

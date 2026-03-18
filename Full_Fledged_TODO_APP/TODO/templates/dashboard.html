@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/dash2.css' %}" />
   <link rel="stylesheet" href="{% static 'css/modal.css' %}" />
 {% endblock css %}
 {% block content %}
@@ -24,7 +24,7 @@
             <tr>
               <th>No.</th>
               <th>Task</th>
-              {% comment %} <th>Task Type</th> {% endcomment %}
+              <th>Link</th>
               <th>Task Time</th>
               <th>Status</th>
               <th class="actions-cell">Action</th>
@@ -40,14 +40,13 @@
                   {% else %}
                     <a href="{% url 'task_details' task.id %}?from=dashboard">{{ task.task.title|capfirst }}</a>
                   {% endif %}
-                  <!-- Task type (sub text) -->
-                  {% comment %} <div class="task-type">
-                    {% if task.task.task_type == 'FUTURE' %}
-                      Scheduled
-                    {% else %}
-                      {{ task.task.task_type|capfirst }}
-                    {% endif %}
-                  </div> {% endcomment %}
+                </td>
+                <td class="task-actions">
+                  {% if task.task.link %}
+                    <a href="{{ task.task.link }}" target="_blank" class="task-link-btn">🚀 Go to Task</a>
+                  {% else %}
+                    <span class="no-link">—</span>
+                  {% endif %}
                 </td>
                 <td class="task-time">
                   <span class="time">{{ task.task.startTime|time:'h:i' }}</span>
@@ -77,7 +76,7 @@
               </tr>
             {% empty %}
               <tr>
-                <td colspan="5" class="empty">🎉 No tasks for today</td>
+                <td colspan="6" class="empty">🎉 No tasks for today</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -98,39 +97,41 @@
               <a href="{% url 'goal_details' goal.id %}" class="goal-card">{{ goal.goal_title|capfirst }}</a>
             {% endfor %}
           </div>
-          <div class="side-footer">
-            <a href="{% url 'all_goals' %}" class="more-link">View all goals →</a>
-          </div>
         {% else %}
           <p class="side-empty">No goals added yet</p>
         {% endif %}
-      </div>
-      <!-- UPCOMING TASKS -->
-      <div class="side-card upcoming-card">
-        <div class="side-header">
-          <h3>📅 Upcoming Tasks</h3>
-          <span class="side-subtitle">Next 7 days</span>
+        <div class="side-footer">
+          <a href="{% url 'all_goals' %}" class="more-link">View all goals →</a>
         </div>
-        {% if upcomingTask %}
-          <ul class="upcoming-list">
-            {% for task in upcomingTask %}
-              <li>
-                <a href="{% url 'update_task' task.id %}" class="upcoming-item">
-                  <div class="upcoming-date-box">
-                    <span class="day">{{ task.start_date|date:'d' }}</span>
-                    <span class="month">{{ task.start_date|date:'M' }}</span>
-                  </div>
-                  <div class="upcoming-info">{{ task.title|capfirst }}</div>
-                </a>
+      </div>
+      <!-- NOTES SECTION -->
+      <div class="side-card notes-card">
+        <div class="side-header">
+          <h3>📝 Notes</h3>
+          <a href="{% url 'create_note' %}" class="btn btn-primary btn-sm">➕ New Note</a>
+        </div>
+        {% if notes %}
+          <div class="notes-scroll">
+            <ul class="notes-list">
+              {% for note in notes %}
+              <li class="note-item">
+                <label class="note-checkbox">
+                  <input type="checkbox"
+                         {% if note.is_done %}checked{% endif %}
+                         data-note-id="{{ note.id }}"
+                         class="note-check">
+                  <span class="note-text {% if note.is_done %}done{% endif %}">{{ note.note|capfirst }}</span>
+                </label>
               </li>
             {% endfor %}
-          </ul>
-          <div class="side-footer">
-            <a href="{% url 'upcoming_task' %}" class="more-link">View all upcoming →</a>
+            </ul>
           </div>
         {% else %}
-          <p class="side-empty">No upcoming tasks</p>
+          <p class="side-empty">No notes added</p>
         {% endif %}
+        <div class="side-footer">
+          <a href="{% url 'all_notes' %}" class="more-link">View all notes →</a>
+        </div>
       </div>
     </aside>
     <!-- DELETE CONFIRMATION MODAL -->
@@ -146,5 +147,39 @@
         </form>
       </div>
     </div>
-    <script src="{% static 'js/delete-modal.js' %}"></script>
-  {% endblock content %}
+  </div>
+  <!-- UPCOMING TASKS -->
+  <div class="side-card upcoming-card">
+    <div class="side-header">
+      <h3>📅 Upcoming Tasks</h3>
+      <span class="side-subtitle">Next 7 days</span>
+    </div>
+    {% if upcomingTask %}
+      <ul class="upcoming-list">
+        {% for task in upcomingTask %}
+          <li>
+            <a href="{% url 'update_task' task.id %}" class="upcoming-item">
+              <div class="upcoming-date-box">
+                <span class="day">{{ task.start_date|date:'d' }}</span>
+                <span class="month">{{ task.start_date|date:'M' }}</span>
+              </div>
+              <div class="upcoming-info">{{ task.title|capfirst }}</div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="upcoming-placeholder">
+        <div class="placeholder-copy">
+          <p class="placeholder-title">No upcoming tasks yet</p>
+          <p class="placeholder-subtitle">Plan a task for this week, and it will appear here.</p>
+        </div>
+      </div>
+    {% endif %}
+    <div class="side-footer">
+      <a href="{% url 'upcoming_task' %}" class="more-link">View all upcoming →</a>
+    </div>
+  </div>
+  <script src="{% static 'js/delete-modal.js' %}"></script>
+  <script src="{% static 'js/note-toggle.js' %}"></script>
+{% endblock content %}

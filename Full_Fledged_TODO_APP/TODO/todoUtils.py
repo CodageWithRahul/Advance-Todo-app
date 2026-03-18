@@ -53,3 +53,11 @@ def is_conflicting(db_tasks, user_start, user_end):
             return conflictTask
 
     return None
+
+
+def checkTaskTime(task):
+    if task.task.startTime and task.task.endTime:
+        now = timezone.localtime().time()
+        print(now, task.task.startTime)
+        return task.task.startTime <= now <= task.task.endTime
+    return True

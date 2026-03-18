@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.conf import settings
+from .models import CoinWallet
 
 
 @receiver(post_save, sender=User)
@@ -24,3 +25,9 @@ def sendWelcomeMail(sender, instance, created, **kwargs):
         email = EmailMessage(sub, bodymess, from_email, recipient)
         email.content_subtype = "html"
         email.send()
+
+
+@receiver(post_save, sender=User)
+def create_wallet(sender, instance, created, **kwargs):
+    if created:
+        CoinWallet.objects.create(user=instance)

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Notes{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/notes.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="notes-page">
+        <div class="notes-layout">
+            <div class="notes-header">
+                <div>
+                    <h1>All notes</h1>
+                    <p>Everything you’ve written, sorted by creation time.</p>
+                </div>
+                <div class="notes-actions">
+                    <a href="{% url 'create_note' %}" class="btn btn-primary">Add note</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to dashboard</a>
+                </div>
+            </div>
+
+            {% if notes %}
+                <div class="notes-grid">
+                    {% for note in notes %}
+                        <article class="note-card {% if note.is_done %}note-complete{% endif %}">
+                            <p class="note-body">{{ note.note|linebreaksbr }}</p>
+                            <div class="note-meta">
+                                <span>{{ note.created_at|date:"d M Y" }} · {{ note.created_at|time:"H:i" }}</span>
+                                {% if note.is_done %}
+                                    <span class="status done">Marked done</span>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">
+                    You don’t have any saved notes yet.
+                    <a href="{% url 'create_note' %}">Add one now.</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
