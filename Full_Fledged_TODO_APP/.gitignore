@@ -32,6 +32,6 @@ staticfiles/
 Thumbs.db
 
 #file 
-ideas
-.ideas
+ideas/
+.ideas/
 Upgradation Ideas.docx
